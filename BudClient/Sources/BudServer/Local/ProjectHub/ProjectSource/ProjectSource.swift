@@ -41,7 +41,7 @@ package final class ProjectSource: ProjectSourceInterface {
     var values: [ValueID: ValueSource.ID] = [:]
     
     package func setName(_ value: String) {
-        logger.start(value)
+        logger.start()
         
         // set ProjectSource.name
         let db = Firestore.firestore()
@@ -101,7 +101,7 @@ package final class ProjectSource: ProjectSourceInterface {
                     return
                 }
                 
-                snapshot.documentChanges.forEach { [weak self] changed in
+                snapshot.documentChanges.forEach { changed in
                     let documentId = changed.document.documentID
                     let systemSource = SystemSource.ID(documentId)
                     

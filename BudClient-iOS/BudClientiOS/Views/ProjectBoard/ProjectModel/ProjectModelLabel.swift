@@ -22,6 +22,9 @@ struct ProjectModelLabel: View {
                      textInput: $projectModelRef.nameInput,
                      submitHandler: projectModelRef.pushName )
             .padding(.horizontal)
+            .task {
+                await projectModelRef.startUpdating()
+            }
     }
 }
 

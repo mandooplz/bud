@@ -17,6 +17,8 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     // MARK: core
     init(config: Config<ProjectBoard.ID>,
          diff: ProjectSourceDiff) {
+        logger.notice("ProjectModel이 생성됩니다.")
+        
         self.config = config
         self.target = diff.target
         self.source = diff.id
@@ -28,6 +30,8 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
         ProjectModelManager.register(self)
     }
     func delete() {
+        logger.notice("ProjectModel이 삭제됩니다.")
+        
         ProjectModelManager.unregister(self.id)
     }
     

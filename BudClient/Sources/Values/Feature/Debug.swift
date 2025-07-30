@@ -57,6 +57,15 @@ public struct BudLogger: Sendable {
         logger.debug("\(fileName):\(line) - \(routine) start")
     }
     
+    public func notice(_ description: String,
+                       _ file: String = #file,
+                      _ line: Int = #line,
+                      _ routine: String = #function) {
+        let fileName = URL(fileURLWithPath: file).lastPathComponent
+        
+        logger.debug("\(fileName):\(line) - \(routine) \n\(description)")
+    }
+    
     public func end(_ description: String? = nil,
                     _ file: String = #file,
                     _ line: Int = #line,

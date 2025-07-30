@@ -53,10 +53,9 @@ package final class ProjectHub: ProjectHubInterface {
             .whereField(ProjectSource.Data.creator, isEqualTo: user.encode())
         
         let projectListener = projectSourcesCollectionRef
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
                     logger.failure(error!)
-                    logger.failure("\(Auth.auth().currentUser)의 ProjectSource snapshot이 없습니다.")
                     return
                 }
                 
@@ -79,18 +78,34 @@ package final class ProjectHub: ProjectHubInterface {
                     switch change.type {
                     case .added:
                         // create ProjectSource
+                        if self?.projectSources[diff.target] == nil {
+                            logger.notice("ProjectSource가 생성됩니다. - \(data.target)")
+                            
+                            let projectSourceRef = ProjectSource(
+                                id: projectSource,
+                                target: data.target,
+                                owner: me)
+                            
+                            self?.projectSources[data.target] = projectSourceRef.id
+                        }
+                        
                         me.ref?.handler?.execute(.projectAdded(diff))
                     case .modified:
                         // notify
+                        logger.notice("ProjectSource가 수정됩니다. - \(data.target)")
+                        
                         projectSource.ref?.handlers?.execute(.modified(diff))
                     case .removed:
-                        guard let projectSourceRef = projectSource.ref else {
-                            logger.failure("ProjectSource가 존재하지 않아 update가 취소되었습니다.")
-                            return
-                        }
-                        
                         // notify
                         projectSource.ref?.handlers?.execute(.removed)
+                        
+                        // removed
+                        if self?.projectSources[data.target] != nil {
+                            logger.notice("ProjetSource가 삭제됩니다. - \(data.target)")
+                            
+                            self?.projectSources[data.target] = nil
+                            projectSource.ref?.delete()
+                        }
                     }
                 }
             }
@@ -107,7 +122,7 @@ package final class ProjectHub: ProjectHubInterface {
     }
     
     // MARK: action
-    package func synchronize() async {
+    package func synchronize() {
         logger.start()
         
         
@@ -118,29 +133,18 @@ package final class ProjectHub: ProjectHubInterface {
         
         let db = Firestore.firestore()
         
-        let projectSource: ProjectSource.ID
-        let target: ProjectID
         do {
             let newProjectName = "Project \(Int.random(in: 1..<1000))"
             
             let data = ProjectSource.Data(name: newProjectName,
                                           creator: self.user)
             
-            let docRef = try db.collection(DB.ProjectSources)
+            try db.collection(DB.ProjectSources)
                 .addDocument(from: data)
-            
-            projectSource = ProjectSource.ID(docRef.documentID)
-            target = data.target
         } catch {
             logger.failure(error)
             return
         }
-        
-        // mutate
-        let projectSourceRef = ProjectSource(id: projectSource,
-                                             target: target,
-                                             owner: self.id)
-        self.projectSources[target] = projectSourceRef.id
     }
     
     
