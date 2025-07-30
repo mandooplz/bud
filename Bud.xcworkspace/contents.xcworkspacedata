@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:BudClient">
+   </FileRef>
+   <Group
+      location = "group:BudClient-iOS"
+      name = "BudClient-iOS">
+      <Group
+         location = "group:BudClientiOS"
+         name = "BudClientiOS">
+         <FileRef
+            location = "group:Assets.xcassets">
+         </FileRef>
+         <FileRef
+            location = "group:BudClientiOSApp.swift">
+         </FileRef>
+         <Group
+            location = "group:Views"
+            name = "Views">
+            <FileRef
+               location = "group:BudClientView.swift">
+            </FileRef>
+            <Group
+               location = "group:SignInForm"
+               name = "SignInForm">
+               <FileRef
+                  location = "group:SignInFormView.swift">
+               </FileRef>
+               <FileRef
+                  location = "group:SignUpFormView.swift">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:Profile"
+               name = "Profile">
+               <FileRef
+                  location = "group:ProfileBoardView.swift">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:Community"
+               name = "Community">
+               <FileRef
+                  location = "group:CommunityView.swift">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:ProjectBoard"
+               name = "ProjectBoard">
+               <FileRef
+                  location = "group:ProjectBoardView.swift">
+               </FileRef>
+               <Group
+                  location = "group:ProjectModel"
+                  name = "ProjectModel">
+                  <FileRef
+                     location = "group:ProjectModelLabel.swift">
+                  </FileRef>
+                  <Group
+                     location = "group:SystemModel"
+                     name = "SystemModel">
+                     <FileRef
+                        location = "group:SystemModelLabel.swift">
+                     </FileRef>
+                     <Group
+                        location = "group:ObjectModel"
+                        name = "ObjectModel">
+                        <Group
+                           location = "group:ActionModel"
+                           name = "ActionModel">
+                           <FileRef
+                              location = "group:ActionModelLabel.swift">
+                           </FileRef>
+                           <FileRef
+                              location = "group:ActionModelView.swift">
+                           </FileRef>
+                        </Group>
+                        <Group
+                           location = "group:StateModel"
+                           name = "StateModel">
+                           <FileRef
+                              location = "group:StateModelView.swift">
+                           </FileRef>
+                           <FileRef
+                              location = "group:StateModelLabel.swift">
+                           </FileRef>
+                           <Group
+                              location = "group:GetterModel"
+                              name = "GetterModel">
+                              <FileRef
+                                 location = "group:GetterModelView.swift">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:GetterModelLabel.swift">
+                              </FileRef>
+                           </Group>
+                           <Group
+                              location = "group:SetterModel"
+                              name = "SetterModel">
+                              <FileRef
+                                 location = "group:SetterModelView.swift">
+                              </FileRef>
+                              <FileRef
+                                 location = "group:SetterModelLabel.swift">
+                              </FileRef>
+                           </Group>
+                        </Group>
+                        <FileRef
+                           location = "group:ObjectModelView.swift">
+                        </FileRef>
+                        <FileRef
+                           location = "group:ObjectModelLabel.swift">
+                        </FileRef>
+                     </Group>
+                     <FileRef
+                        location = "group:SystemModelView.swift">
+                     </FileRef>
+                  </Group>
+                  <FileRef
+                     location = "group:ProjectModelView.swift">
+                  </FileRef>
+               </Group>
+            </Group>
+         </Group>
+         <FileRef
+            location = "group:Info.plist">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:BudClientiOS.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:GoogleService-Info.plist">
+      </FileRef>
+      <Group
+         location = "group:BudClientiOSUITests"
+         name = "BudClientiOSUITests">
+         <FileRef
+            location = "group:BudClientiOSUITestsLaunchTests.swift">
+         </FileRef>
+         <FileRef
+            location = "group:BudClientiOSUITests.swift">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:BudClientUI"
+         name = "BudClientUI">
+         <FileRef
+            location = "group:BudClientUI.swift">
+         </FileRef>
+         <FileRef
+            location = "group:EditableText.swift">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:BudClientiOS.xctestplan">
+      </FileRef>
+      <Group
+         location = "group:BudClientiOSTests"
+         name = "BudClientiOSTests">
+         <FileRef
+            location = "group:BudClientiOSTests.swift">
+         </FileRef>
+      </Group>
+   </Group>
+</Workspace>
