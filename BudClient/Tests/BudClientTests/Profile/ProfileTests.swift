@@ -30,12 +30,12 @@ struct ProfileTests {
             let budCacheRef = try #require(await profileRef.config.budCache.ref)
             try await #require(budCacheRef.getUser() != nil)
             
-            // when
-            await profileRef.signOut {
+            await profileRef.setCaptureHook {
                 await profileRef.delete()
-            } mutateHook: {
-                
             }
+            
+            // when
+            await profileRef.signOut()
 
             // then
             let issue = try #require(await profileRef.issue as? KnownIssue)
@@ -52,13 +52,13 @@ struct ProfileTests {
             let budCacheRef = try #require(await profileRef.config.budCache.ref)
             try await #require(budCacheRef.getUser() != nil)
             
-            // when
-            await profileRef.signOut {
-                
-            } mutateHook: {
+            await profileRef.setMutateHook {
                 await profileRef.delete()
             }
-
+            
+            // when
+            await profileRef.signOut()
+            
             // then
             let issue = try #require(await profileRef.issue as? KnownIssue)
             #expect(issue.reason == "profileBoardIsDeleted")

@@ -70,6 +70,7 @@ package final class ProjectSource: ProjectSourceInterface {
     }
     
     var listener: EventListener?
+    var isListening: Bool = false
     package var handlers: EventHandler?
     package func appendHandler(requester: ObjectID, _ handler: EventHandler) {
         logger.start()
@@ -79,7 +80,7 @@ package final class ProjectSource: ProjectSourceInterface {
             logger.failure("ProjectSource가 존재하지 않아 실행취소됩니다.")
             return
         }
-        guard self.listener == nil else {
+        guard isListening == false else {
             logger.failure("Firebase 리스너가 이미 등록되어 있습니다.")
             return
         }
@@ -95,8 +96,9 @@ package final class ProjectSource: ProjectSourceInterface {
             .collection(DB.ValueSources)
         
         let systemListener = systemSourceCollectionRef
-            .addSnapshotListener({ snapshot, error in
+            .addSnapshotListener({ [weak self] snapshot, error in
                 guard let snapshot else {
+                    self?.isListening = false
                     logger.failure(error!)
                     return
                 }
@@ -120,6 +122,8 @@ package final class ProjectSource: ProjectSourceInterface {
                     case .added:
                         // create SystemSource
                         if me.ref?.systems[data.target] == nil {
+                            logger.notice("SystemSource가 생성됩니다. - \(data.target)")
+                            
                             let systemSourceRef = SystemSource(id: systemSource,
                                                                target: data.target,
                                                                parent: me)
@@ -131,22 +135,32 @@ package final class ProjectSource: ProjectSourceInterface {
                         handler.execute(.systemAdded(diff))
                     case .modified:
                         // notify
+                        logger.notice("SystemSource가 수정됩니다. - \(data.target)")
+                        
                         systemSource.ref?.handler?.execute(.modified(diff))
                     case .removed:
-                        // delete SystemSource
-                        me.ref?.systems[data.target] = nil
-                        systemSource.ref?.delete()
-                        
                         // notify
                         systemSource.ref?.handler?.execute(.removed)
+                        
+                        // remove SystemSource
+                        if let systemSource = self?.systems[data.target],
+                           let ststemSourceRef = systemSource.ref {
+                            logger.notice("SystemSource가 삭제됩니다.")
+                            
+                            self?.systems[data.target] = nil
+                            ststemSourceRef.delete()
+                        } else {
+                            logger.notice("SystemSource가 이미 삭제된 상태입니다.")
+                        }
                     }
                 }
             })
         
         let valueListener = valueSourceCollectionRef
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
                     logger.failure(error!)
+                    self?.isListening = false
                     return
                 }
                 
@@ -190,8 +204,12 @@ package final class ProjectSource: ProjectSourceInterface {
         
         // mutate
         self.handlers = handler
+        
+        self.listener?.remove()
         self.listener = .init(system: systemListener,
                               value: valueListener)
+        
+        self.isListening = true
     }
     
     package func registerSync(_ object: ObjectID) async {

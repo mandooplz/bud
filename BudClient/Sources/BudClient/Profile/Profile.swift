@@ -13,7 +13,7 @@ private let logger = BudLogger("Profile")
 
 // MARK: Object
 @MainActor @Observable
-public final class Profile: Debuggable {
+public final class Profile: Debuggable, Hookable {
     // MARK: core
     init(config: Config<BudClient.ID>) {
         self.config = config
@@ -31,17 +31,22 @@ public final class Profile: Debuggable {
     
     public var issue: (any IssueRepresentable)?
     
+    package var captureHook: Hook?
+    package var computeHook: Hook?
+    package var mutateHook: Hook?
+    
     
     // MARK: action
     public func signOut() async {
         logger.start()
         
-        await signOut(captureHook: nil, mutateHook: nil)
-    }
-    func signOut(captureHook: Hook?, mutateHook: Hook?) async {
         // capture
         await captureHook?()
-        guard self.id.isExist else { setIssue(Error.profileBoardIsDeleted); return }
+        guard self.id.isExist else {
+            setIssue(Error.profileBoardIsDeleted)
+            logger.failure("Profile이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
         let config = self.config
         let budClient = config.parent
         let projectBoard = budClient.ref!.projectBoard

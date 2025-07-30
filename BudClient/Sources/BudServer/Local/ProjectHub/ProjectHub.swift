@@ -36,12 +36,16 @@ package final class ProjectHub: ProjectHubInterface {
     }
     
     var listener: ListenerRegistration?
+    var isListening: Bool = false
+    
     var handler: EventHandler?
+    
+    // action으로 변경
     package func appendHandler(requester: ObjectID,
                                _ handler: EventHandler) {
         // capture
-        guard self.listener == nil else {
-            logger.failure("ProjectSource의 Firebase 리스너가 이미 등록되어 있습니다.")
+        guard isListening == false else {
+            logger.failure("유효한 Firebase 리스너가 이미 존재합니다.")
             return
         }
         let me = self.id
@@ -55,6 +59,7 @@ package final class ProjectHub: ProjectHubInterface {
         let projectListener = projectSourcesCollectionRef
             .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
+                    self?.isListening = false
                     logger.failure(error!)
                     return
                 }
@@ -112,7 +117,11 @@ package final class ProjectHub: ProjectHubInterface {
         
         // mutate
         self.handler = handler
+        
+        self.listener?.remove()
         self.listener = projectListener
+        
+        self.isListening = true
     }
     
     package func notifyNameChanged(_ project: ProjectID) async {
