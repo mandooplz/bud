@@ -17,8 +17,11 @@ private let logger = BudLogger("ProjectHub")
 @MainActor
 package final class ProjectHub: ProjectHubInterface {
     // MARK: core
-    init(user: UserID) {
+    init(user: UserID, owner: BudServer.ID) {
+        logger.notice("ProjectSource가 생성됩니다. - \(user)")
+        
         self.user = user
+        self.owner = owner
         
         ProjectHubManager.register(self)
     }
@@ -27,6 +30,7 @@ package final class ProjectHub: ProjectHubInterface {
     // MARK: state
     package nonisolated let id = ID()
     nonisolated let user: UserID
+    nonisolated let owner: BudServer.ID
     
     var projects: [ProjectID: ProjectSource.ID] = [:]
     
@@ -42,12 +46,17 @@ package final class ProjectHub: ProjectHubInterface {
     // MARK: action
     package func appendHandler(requester: ObjectID,
                                _ handler: EventHandler) {
+        logger.start()
+        
         // capture
         guard isListening == false else {
             logger.failure("유효한 Firebase 리스너가 이미 존재합니다.")
             return
         }
         let me = self.id
+        let budServerRef = self.owner.ref!
+        
+        
         
         // compute
         let db = Firestore.firestore()
@@ -121,6 +130,14 @@ package final class ProjectHub: ProjectHubInterface {
         self.listener = projectListener
         
         self.isListening = true
+        
+        budServerRef
+            .projectHubs.values
+            .compactMap { $0.ref }
+            .filter { $0.isListening == false }
+            .flatMap { $0.projects.values }
+            .compactMap { $0.ref }
+            .forEach { cleanUpProjectSource($0) }
     }
     
     package func notifyNameChanged(_ project: ProjectID) async {
@@ -153,6 +170,61 @@ package final class ProjectHub: ProjectHubInterface {
             return
         }
     }
+    
+    
+    // MARK: Helphers
+    private func cleanUpProjectSource(_ projectSourceRef: ProjectSource) {
+        // delete Getters
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }.flatMap { $0.objects.values }
+            .compactMap { $0.ref }.flatMap { $0.states.values }
+            .compactMap { $0.ref }.flatMap { $0.getters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete Setters
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }.flatMap { $0.objects.values }
+            .compactMap { $0.ref }.flatMap { $0.states.values }
+            .compactMap { $0.ref }.flatMap { $0.setters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete States
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }.flatMap { $0.objects.values }
+            .compactMap { $0.ref }.flatMap { $0.states.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete Actions
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }.flatMap { $0.objects.values }
+            .compactMap { $0.ref }.flatMap { $0.actions.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete Objects
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }.flatMap { $0.objects.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete Systems
+        projectSourceRef.systems.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete Values
+        projectSourceRef.values.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete Project
+        projectSourceRef.delete()
+    }
+
     
     
     // MARK: value

@@ -218,8 +218,6 @@ package final class ProjectSource: ProjectSourceInterface {
     
     package func registerSync(_ object: ObjectID) async {
         logger.start()
-        
-        logger.failure("Firebase에서 자체적으로 처리됨")
     }
     
     // MARK: action
