@@ -37,6 +37,7 @@ package final class ObjectSource: ObjectSourceInterface {
     nonisolated let owner: SystemSource.ID
     
     var listener: EventListener?
+    var isListening: Bool = false
     var handler: EventHandler?
     
     var states: [StateID: StateSource.ID] = [:]
@@ -72,8 +73,12 @@ package final class ObjectSource: ObjectSourceInterface {
             return
         }
     }
+    package func registerSync(_ object: ObjectID) async {
+        logger.start()
+    }
     
     
+    // MARK: action
     package func appendHandler(requester: ObjectID,
                                _ handler: EventHandler) {
         logger.start()
@@ -83,8 +88,8 @@ package final class ObjectSource: ObjectSourceInterface {
             logger.failure("ObjectSource가 존재하지 않아 실행취소됩니다.")
             return
         }
-        guard listener == nil else {
-            logger.failure("StateSource, ActionSource의 Firebase 리스너가 이미 존재합니다.")
+        guard isListening == false else {
+            logger.failure("StateSource, ActionSource의 유효한 Firebase 리스너가 이미 존재합니다.")
             return
         }
         let me = self.id
@@ -100,9 +105,10 @@ package final class ObjectSource: ObjectSourceInterface {
         // compute
         let stateListener = objectSourceDocRef
             .collection(DB.StateSources)
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
                     logger.failure("SnapshotListener Error: \(error!))")
+                    self?.isListening = false
                     return
                 }
                 
@@ -149,9 +155,10 @@ package final class ObjectSource: ObjectSourceInterface {
         
         let actionListener = objectSourceDocRef
             .collection(DB.ActionSources)
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
                     logger.failure("SnapshotListener Error: \(error!))")
+                    self?.isListening = false
                     return
                 }
                 
@@ -198,28 +205,18 @@ package final class ObjectSource: ObjectSourceInterface {
         
         // mutate
         self.handler = handler
+        
+        self.listener?.remove()
         self.listener = .init(state: stateListener,
                               action: actionListener)
-    }
-    
-    package func registerSync(_ object: ObjectID) async {
-        logger.start()
         
-        logger.failure("Firebase에 의해 알아서 처리됩니다.")
+        self.isListening = true
     }
-    
-    
-    
-    // MARK: action
     package func synchronize() async {
         logger.start()
-        
-        logger.failure("Firebase에 의해 알아서 처리됩니다.")
     }
     package func notifyStateChanged() async {
         logger.start()
-        
-        logger.failure("Firebase에 의해 알아서 처리됩니다.")
     }
     
     package func appendNewState() async {

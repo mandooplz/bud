@@ -17,6 +17,8 @@ private let logger = BudLogger("ActionSource")
 package final class ActionSource: ActionSourceInterface {
     // MARK: core
     init(id: ID, target: ActionID, owner: ObjectSource.ID) {
+        logger.notice("ActionSource가 생성됩니다.")
+        
         self.id = id
         self.target = target
         self.owner = owner
@@ -24,6 +26,8 @@ package final class ActionSource: ActionSourceInterface {
         ActionSourceManager.register(self)
     }
     func delete() {
+        logger.notice("ActionSource가 제거됩니다.")
+        
         ActionSourceManager.unregister(self.id)
     }
     
@@ -67,6 +71,9 @@ package final class ActionSource: ActionSourceInterface {
     }
     
     var handler: EventHandler?
+    
+    
+    // MARK: action
     package func appendHandler(requester: ObjectID,
                                _ handler: EventHandler) async {
         logger.start()
@@ -74,9 +81,6 @@ package final class ActionSource: ActionSourceInterface {
         // mutate
         self.handler = handler
     }
-    
-    
-    // MARK: action
     package func notifyStateChanged() async {
         logger.start()
         

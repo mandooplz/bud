@@ -20,6 +20,8 @@ package final class ProjectSource: ProjectSourceInterface {
     init(id: ID,
          target: ProjectID,
          owner: ProjectHub.ID) {
+        logger.notice("ProjectSource가 생성됩니다.")
+        
         self.id = id
         self.target = target
         self.owner = owner
@@ -27,6 +29,8 @@ package final class ProjectSource: ProjectSourceInterface {
         ProjectSourceManager.register(self)
     }
     func delete() {
+        logger.notice("ProjectSource가 제거됩니다.")
+        
         self.listener?.remove()
         
         ProjectSourceManager.unregister(self.id)
@@ -341,7 +345,7 @@ package final class ProjectSource: ProjectSourceInterface {
         // mutate
         self.cleanUpProjectSource()
         
-        projectHubRef.projectSources[self.target] = nil
+        projectHubRef.projects[self.target] = nil
         self.delete()
     }
     

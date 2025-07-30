@@ -56,12 +56,20 @@ package final class SystemSource: SystemSourceInterface {
     package var objects: [ObjectID: ObjectSource.ID] = [:]
     
     var listener: ListenerRegistration?
+    var isListening = false
+    
     var handler: EventHandler?
     
+    
+    // MARK: action
     package func appendHandler(requester: ObjectID, _ handler: EventHandler) {
         logger.start()
         
         // capture
+        guard isListening == false else {
+            logger.failure("유효한 Firebase 리스너가 이미 존재합니다.")
+            return
+        }
         let me = self.id
         
         let db = Firestore.firestore()
@@ -71,17 +79,12 @@ package final class SystemSource: SystemSourceInterface {
             .document(id.value)
             .collection(DB.ObjectSources)
         
-        // set listener
-        guard self.listener == nil else {
-            logger.failure("Firebase 리스너가 이미 등록되어 있습니다.")
-            return
-        }
-        
-        // objectSource의 컬렉션
-        self.listener = objectSourceCollectionRef
-            .addSnapshotListener { snapshot, error in
+        // compute
+        let objectListener = objectSourceCollectionRef
+            .addSnapshotListener { [weak self] snapshot, error in
                 guard let snapshot else {
                     logger.failure(error!)
+                    self?.isListening = false
                     return
                 }
                 
@@ -125,23 +128,24 @@ package final class SystemSource: SystemSourceInterface {
                     }
                 }
             }
+        
+        // mutate
+        self.handler = handler
+        
+        self.listener?.remove()
+        self.listener = objectListener
+        
+        self.isListening = true
     }
-    
     package func registerSync(_ object: ObjectID) async {
-        // Firebase에서 자체적으로 처리함
-        return
+        logger.start()
     }
     
-    // MARK: action
     package func synchronize() async {
         logger.start()
-        
-        // Firebase에서 listener를 등록할 때 내부적으로 호출
-        
-        return
     }
     package func notifyStateChanged() async {
-        return
+        logger.start()
     }
     
     package func addSystemTop() async {
@@ -373,12 +377,12 @@ package final class SystemSource: SystemSourceInterface {
     package func addSystemBottom() async {
         logger.start()
         
+        // capture
         guard id.isExist else {
             logger.failure("SystemSource가 존재하지 않아 실행 취소됩니다.")
             return
         }
         
-        // db & ref
         let firebaseDB = Firestore.firestore()
         
         let projectSourceDocRef = firebaseDB
@@ -393,7 +397,7 @@ package final class SystemSource: SystemSourceInterface {
         let systemSourceDocRef = systemSourceCollectionRef
             .document(id.value)
         
-        // transaction
+        // compute
         do {
             let _ = try await firebaseDB.runTransaction { @Sendable transaction, errorPointer in
                 do {

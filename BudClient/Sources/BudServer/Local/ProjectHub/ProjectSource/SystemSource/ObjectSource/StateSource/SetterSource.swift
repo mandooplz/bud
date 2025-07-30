@@ -17,6 +17,8 @@ private let logger = BudLogger("SetterSource")
 package final class SetterSource: SetterSourceInterface {
     // MARK: core
     init(id: ID, target: SetterID, owner: StateSource.ID) {
+        logger.notice("SetterSource가 생성됩니다.")
+        
         self.id = id
         self.target = target
         self.owner = owner
@@ -24,6 +26,8 @@ package final class SetterSource: SetterSourceInterface {
         SetterSourceManager.register(self)
     }
     func delete() {
+        logger.notice("SetterSource가 제거됩니다.")
+        
         SetterSourceManager.unregister(self.id)
     }
     

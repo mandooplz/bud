@@ -43,7 +43,7 @@ package final class ProjectSourceMock: ProjectSourceInterface {
     private(set) var name: String
     package var creator: UserID
     
-    var syncQyeye: Deque<ObjectID> = []
+    var syncQueue: Deque<ObjectID> = []
     var systems: Set<SystemSourceMock.ID> = []
     var values: [ValueID:ValueSourceMock.ID] = [:]
     
@@ -59,7 +59,7 @@ package final class ProjectSourceMock: ProjectSourceInterface {
         self.name = value
     }
     package func registerSync(_ object: ObjectID) async {
-        self.syncQyeye.append(object)
+        self.syncQueue.append(object)
     }
     
     package func appendHandler(requester: ObjectID, _ handler: EventHandler) {

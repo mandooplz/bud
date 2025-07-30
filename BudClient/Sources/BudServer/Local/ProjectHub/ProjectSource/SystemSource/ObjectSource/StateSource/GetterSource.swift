@@ -20,6 +20,8 @@ package final class GetterSource: GetterSourceInterface {
     init(id: ID,
          target: GetterID,
          owner: StateSource.ID) {
+        logger.notice("GetterSource가 생성됩니다.")
+        
         self.id = id
         self.target = target
         self.owner = owner
@@ -27,6 +29,8 @@ package final class GetterSource: GetterSourceInterface {
         GetterSourceManager.register(self)
     }
     func delete() {
+        logger.notice("GetterSource가 제거됩니다.")
+        
         GetterSourceManager.unregister(self.id)
     }
     

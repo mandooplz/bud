@@ -28,11 +28,10 @@ package final class ProjectHub: ProjectHubInterface {
     package nonisolated let id = ID()
     nonisolated let user: UserID
     
-    var projectSources: [ProjectID: ProjectSource.ID] = [:]
+    var projects: [ProjectID: ProjectSource.ID] = [:]
     
     package func registerSync(_ object: ObjectID) async {
-        // Firebase에서 자체적으로 처리
-        return
+        logger.start()
     }
     
     var listener: ListenerRegistration?
@@ -40,7 +39,7 @@ package final class ProjectHub: ProjectHubInterface {
     
     var handler: EventHandler?
     
-    // action으로 변경
+    // MARK: action
     package func appendHandler(requester: ObjectID,
                                _ handler: EventHandler) {
         // capture
@@ -83,7 +82,7 @@ package final class ProjectHub: ProjectHubInterface {
                     switch change.type {
                     case .added:
                         // create ProjectSource
-                        if self?.projectSources[diff.target] == nil {
+                        if self?.projects[diff.target] == nil {
                             logger.notice("ProjectSource가 생성됩니다. - \(data.target)")
                             
                             let projectSourceRef = ProjectSource(
@@ -91,7 +90,7 @@ package final class ProjectHub: ProjectHubInterface {
                                 target: data.target,
                                 owner: me)
                             
-                            self?.projectSources[data.target] = projectSourceRef.id
+                            self?.projects[data.target] = projectSourceRef.id
                         }
                         
                         me.ref?.handler?.execute(.projectAdded(diff))
@@ -105,10 +104,10 @@ package final class ProjectHub: ProjectHubInterface {
                         projectSource.ref?.handlers?.execute(.removed)
                         
                         // removed
-                        if self?.projectSources[data.target] != nil {
+                        if self?.projects[data.target] != nil {
                             logger.notice("ProjetSource가 삭제됩니다. - \(data.target)")
                             
-                            self?.projectSources[data.target] = nil
+                            self?.projects[data.target] = nil
                             projectSource.ref?.delete()
                         }
                     }
@@ -130,7 +129,6 @@ package final class ProjectHub: ProjectHubInterface {
         logger.failure("Firebase에서 알아서 처리됨")
     }
     
-    // MARK: action
     package func synchronize() {
         logger.start()
         
