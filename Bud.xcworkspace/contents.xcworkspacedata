@@ -5,6 +5,12 @@
       location = "group:README.md">
    </FileRef>
    <FileRef
+      location = "group:BudLocal-Mac/BudLocal-Mac.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:BudLocal">
+   </FileRef>
+   <FileRef
       location = "group:BudClient">
    </FileRef>
    <Group
