@@ -12,14 +12,31 @@ let package = Package(
             targets: ["BudLocal"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-collections.git", from: "1.0.4"),
+        .package(url: "https://github.com/mandooplz/budmacro.git", branch: "main")
+    ],
     targets: [
         // BudLocal
         .target(
-            name: "BudLocal"
+            name: "BudLocal",
+            dependencies: [
+                "Values"
+            ]
         ),
         .testTarget(
             name: "BudLocalTests",
-            dependencies: ["BudLocal"]
+            dependencies: ["BudLocal", "Values"]
         ),
+        
+        
+        // Values
+        .target(
+            name: "Values",
+            dependencies: [
+                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "BudMacro", package: "budmacro")
+            ]
+        )
     ]
 )
