@@ -283,11 +283,11 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
 @MainActor @Observable
 fileprivate final class ProjectModelManager: Sendable {
     // MARK: state
-    fileprivate static var container: [ProjectModel.ID: ProjectModel] = [:]
-    fileprivate static func register(_ object: ProjectModel) {
+    static var container: [ProjectModel.ID: ProjectModel] = [:]
+    static func register(_ object: ProjectModel) {
         container[object.id] = object
     }
-    fileprivate static func unregister(_ id: ProjectModel.ID) {
+    static func unregister(_ id: ProjectModel.ID) {
         container[id] = nil
     }
 }

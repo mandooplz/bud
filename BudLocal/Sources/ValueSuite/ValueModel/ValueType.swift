@@ -35,6 +35,17 @@ package extension ValueID {
 }
 
 
+public struct ValueField: Sendable, Hashable, Codable {
+    public let name: String
+    public let type: ValueID
+    
+    public init(name: String, type: ValueID) {
+        self.name = name
+        self.type = type
+    }
+}
+
+
 
 
 // MARK: StateValue
