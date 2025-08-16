@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  BudLocal-Mac
 //
-//  Created by 김민우 on 8/13/25.
+//  Created by 김민우 on 8/16/25.
 //
 
 import SwiftUI

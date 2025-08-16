@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "BudLocal",
+    platforms: [.macOS(.v26)],
     products: [
         // BudLocal
         .library(
@@ -21,18 +22,18 @@ let package = Package(
         .target(
             name: "BudLocal",
             dependencies: [
-                "Values"
+                "ValueSuite"
             ]
         ),
         .testTarget(
             name: "BudLocalTests",
-            dependencies: ["BudLocal", "Values"]
+            dependencies: ["BudLocal", "ValueSuite"]
         ),
         
         
         // Values
         .target(
-            name: "Values",
+            name: "ValueSuite",
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
                 .product(name: "BudMacro", package: "budmacro")

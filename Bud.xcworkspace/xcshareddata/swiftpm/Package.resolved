@@ -1,5 +1,5 @@
 {
-  "originHash" : "3410fd0c031cf520875bcd626490c7b645cb3a70ebc42c164d9430d9d3d0270f",
+  "originHash" : "4c79678239f1b1d9b51f518bc9b7bde4ffdb3a9e861a73f97e683d88722f6771",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/googleads/google-ads-on-device-conversion-ios-sdk",
       "state" : {
-        "revision" : "428d8bb138e00f9a3f4f61cc6cd8863607524f65",
-        "version" : "2.1.0"
+        "revision" : "973bd67929bfbe465f63c05cd5a4b113765fbc7f",
+        "version" : "2.2.1"
       }
     },
     {

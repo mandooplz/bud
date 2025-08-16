@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "5B6CA836-FCDF-4099-84A9-089E09AA6846",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BudLocalTests",
+        "name" : "BudLocalTests"
+      }
+    }
+  ],
+  "version" : 1
+}

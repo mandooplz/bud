@@ -6,12 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CEAB5DA92E5048C300496092 /* BudLocal in Frameworks */ = {isa = PBXBuildFile; productRef = CEAB5DA82E5048C300496092 /* BudLocal */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		CED2B3732E4C559C003F9932 /* BudLocal-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BudLocal-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE43CE1B2E504824003BB455 /* BudLocal-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BudLocal-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CED2B3752E4C559C003F9932 /* BudLocal-Mac */ = {
+		CE43CE1D2E504824003BB455 /* BudLocal-Mac */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "BudLocal-Mac";
 			sourceTree = "<group>";
@@ -19,28 +23,29 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CED2B3702E4C559C003F9932 /* Frameworks */ = {
+		CE43CE182E504824003BB455 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEAB5DA92E5048C300496092 /* BudLocal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CED2B36A2E4C559C003F9932 = {
+		CE43CE122E504824003BB455 = {
 			isa = PBXGroup;
 			children = (
-				CED2B3752E4C559C003F9932 /* BudLocal-Mac */,
-				CED2B3742E4C559C003F9932 /* Products */,
+				CE43CE1D2E504824003BB455 /* BudLocal-Mac */,
+				CE43CE1C2E504824003BB455 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		CED2B3742E4C559C003F9932 /* Products */ = {
+		CE43CE1C2E504824003BB455 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CED2B3732E4C559C003F9932 /* BudLocal-Mac.app */,
+				CE43CE1B2E504824003BB455 /* BudLocal-Mac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,64 +53,68 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CED2B3722E4C559C003F9932 /* BudLocal-Mac */ = {
+		CE43CE1A2E504824003BB455 /* BudLocal-Mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CED2B37E2E4C559D003F9932 /* Build configuration list for PBXNativeTarget "BudLocal-Mac" */;
+			buildConfigurationList = CE43CE262E504825003BB455 /* Build configuration list for PBXNativeTarget "BudLocal-Mac" */;
 			buildPhases = (
-				CED2B36F2E4C559C003F9932 /* Sources */,
-				CED2B3702E4C559C003F9932 /* Frameworks */,
-				CED2B3712E4C559C003F9932 /* Resources */,
+				CE43CE172E504824003BB455 /* Sources */,
+				CE43CE182E504824003BB455 /* Frameworks */,
+				CE43CE192E504824003BB455 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CED2B3752E4C559C003F9932 /* BudLocal-Mac */,
+				CE43CE1D2E504824003BB455 /* BudLocal-Mac */,
 			);
 			name = "BudLocal-Mac";
 			packageProductDependencies = (
+				CEAB5DA82E5048C300496092 /* BudLocal */,
 			);
 			productName = "BudLocal-Mac";
-			productReference = CED2B3732E4C559C003F9932 /* BudLocal-Mac.app */;
+			productReference = CE43CE1B2E504824003BB455 /* BudLocal-Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		CED2B36B2E4C559C003F9932 /* Project object */ = {
+		CE43CE132E504824003BB455 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
-					CED2B3722E4C559C003F9932 = {
+					CE43CE1A2E504824003BB455 = {
 						CreatedOnToolsVersion = 26.0;
 					};
 				};
 			};
-			buildConfigurationList = CED2B36E2E4C559C003F9932 /* Build configuration list for PBXProject "BudLocal-Mac" */;
+			buildConfigurationList = CE43CE162E504824003BB455 /* Build configuration list for PBXProject "BudLocal-Mac" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = CED2B36A2E4C559C003F9932;
+			mainGroup = CE43CE122E504824003BB455;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CEAB5DA72E5048C300496092 /* XCLocalSwiftPackageReference "../BudLocal" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = CED2B3742E4C559C003F9932 /* Products */;
+			productRefGroup = CE43CE1C2E504824003BB455 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CED2B3722E4C559C003F9932 /* BudLocal-Mac */,
+				CE43CE1A2E504824003BB455 /* BudLocal-Mac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CED2B3712E4C559C003F9932 /* Resources */ = {
+		CE43CE192E504824003BB455 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +124,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CED2B36F2E4C559C003F9932 /* Sources */ = {
+		CE43CE172E504824003BB455 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +134,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		CED2B37C2E4C559D003F9932 /* Debug */ = {
+		CE43CE242E504825003BB455 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -189,7 +198,7 @@
 			};
 			name = Debug;
 		};
-		CED2B37D2E4C559D003F9932 /* Release */ = {
+		CE43CE252E504825003BB455 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -245,7 +254,7 @@
 			};
 			name = Release;
 		};
-		CED2B37F2E4C559D003F9932 /* Debug */ = {
+		CE43CE272E504825003BB455 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -269,6 +278,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -276,7 +286,7 @@
 			};
 			name = Debug;
 		};
-		CED2B3802E4C559D003F9932 /* Release */ = {
+		CE43CE282E504825003BB455 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -300,6 +310,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -310,25 +321,39 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CED2B36E2E4C559C003F9932 /* Build configuration list for PBXProject "BudLocal-Mac" */ = {
+		CE43CE162E504824003BB455 /* Build configuration list for PBXProject "BudLocal-Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CED2B37C2E4C559D003F9932 /* Debug */,
-				CED2B37D2E4C559D003F9932 /* Release */,
+				CE43CE242E504825003BB455 /* Debug */,
+				CE43CE252E504825003BB455 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CED2B37E2E4C559D003F9932 /* Build configuration list for PBXNativeTarget "BudLocal-Mac" */ = {
+		CE43CE262E504825003BB455 /* Build configuration list for PBXNativeTarget "BudLocal-Mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CED2B37F2E4C559D003F9932 /* Debug */,
-				CED2B3802E4C559D003F9932 /* Release */,
+				CE43CE272E504825003BB455 /* Debug */,
+				CE43CE282E504825003BB455 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		CEAB5DA72E5048C300496092 /* XCLocalSwiftPackageReference "../BudLocal" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../BudLocal;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CEAB5DA82E5048C300496092 /* BudLocal */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BudLocal;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = CED2B36B2E4C559C003F9932 /* Project object */;
+	rootObject = CE43CE132E504824003BB455 /* Project object */;
 }

@@ -4,9 +4,26 @@
    <FileRef
       location = "group:README.md">
    </FileRef>
-   <FileRef
-      location = "group:BudLocal-Mac/BudLocal-Mac.xcodeproj">
-   </FileRef>
+   <Group
+      location = "group:BudLocal-Mac"
+      name = "BudLocal-Mac">
+      <FileRef
+         location = "group:BudLocal-Mac.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:BudLocal-Mac"
+         name = "BudLocal-Mac">
+         <FileRef
+            location = "group:BudLocal_MacApp.swift">
+         </FileRef>
+         <FileRef
+            location = "group:Assets.xcassets">
+         </FileRef>
+         <FileRef
+            location = "group:ContentView.swift">
+         </FileRef>
+      </Group>
+   </Group>
    <FileRef
       location = "group:BudLocal">
    </FileRef>
@@ -174,4 +191,7 @@
          </FileRef>
       </Group>
    </Group>
+   <FileRef
+      location = "group:BudLocal.xctestplan">
+   </FileRef>
 </Workspace>
