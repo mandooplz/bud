@@ -27,7 +27,6 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     public var name: String = "New Project"
     public var systems: [SystemID: SystemModel.ID] = [:]
     public var values: [ValueID: ValueModel.ID] = [:]
-    public var workflows: [WorkflowID: WorkflowModel.ID] = [:]
     
     public var issue: (any IssueRepresentable)?
     public var callback: Callback?
@@ -40,7 +39,6 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     // MARK: action
     public func createFirstSystem() async { }
     public func createValue() async { }
-    public func createWorkflow() async { }
     
     public func removeProject() async { }
     

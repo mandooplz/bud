@@ -39,10 +39,14 @@ public final class StateModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func createGetter() async {
+    public func setUpAccessor() async {
         fatalError()
     }
-    public func createSetter() async {
+    
+    public func appendGetter() async {
+        fatalError()
+    }
+    public func appendSetter() async {
         fatalError()
     }
     

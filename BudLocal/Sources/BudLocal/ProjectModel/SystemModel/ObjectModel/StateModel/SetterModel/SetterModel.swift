@@ -39,7 +39,6 @@ public final class SetterModel: Debuggable, Hookable {
     public func duplicateSetter() async {
         fatalError()
     }
-    
     public func removeSetter() async {
         fatalError()
     }

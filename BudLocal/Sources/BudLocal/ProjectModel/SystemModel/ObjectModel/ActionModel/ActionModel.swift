@@ -41,7 +41,7 @@ public final class ActionModel: Debuggable, Hookable {
     public func duplicateAction() async {
         fatalError()
     }
-    public func startFlow() async {
+    public func createFlow() async {
         fatalError()
     }
     

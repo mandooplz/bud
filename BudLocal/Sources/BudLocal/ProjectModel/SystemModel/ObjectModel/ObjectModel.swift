@@ -34,6 +34,7 @@ public final class ObjectModel: Debuggable, Hookable {
     
     public internal(set) var states: [StateID: StateModel.ID] = [:]
     public internal(set) var actions: [ActionID: ActionModel.ID] = [:]
+    public internal(set) var flows: [FlowID: FlowModel.ID] = [:]
     
     public var issue: (any IssueRepresentable)?
     

@@ -5,13 +5,18 @@
 //  Created by 김민우 on 8/17/25.
 //
 import Foundation
+import ValueSuite
+
+private let logger = BudLogger("FlowModel")
 
 
 // MARK: Object
 @MainActor @Observable
 public final class FlowModel: Sendable {
     // MARK: core
-    init() {
+    init(action: ActionID) {
+        self.action = action
+        
         FlowModelManager.register(self)
     }
     func delete() {
@@ -21,9 +26,18 @@ public final class FlowModel: Sendable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let target = FlowID()
+    
+    public var name: String = "New Flow"
+    
+    public var setters: [SetterID] = []
+    public nonisolated let action: ActionID
     
     
     // MARK: action
+    public func removeFlow() async {
+        fatalError()
+    }
     
     
     // MARK: value
