@@ -368,6 +368,17 @@ struct SystemModelTests {
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
         }
+        
+        @Test func deleteSystemModel() async throws {
+            // given
+            try await #require(systemModelRef.id.isExist == true)
+            
+            // when
+            await systemModelRef.removeSystem()
+            
+            // then
+            await #expect(systemModelRef.id.isExist == false)
+        }
     }
 }
 
@@ -394,4 +405,3 @@ private func getSystemModel(_ budLocalRef: BudLocal) async throws -> SystemModel
     let systemModelRef = try #require(await systemModel.ref)
     return systemModelRef
 }
-

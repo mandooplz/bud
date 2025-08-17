@@ -7,14 +7,17 @@
 import Foundation
 import ValueSuite
 
+private let logger = BudLogger("ObjectModel")
+
 
 // MARK: Object
 @MainActor @Observable
 public final class ObjectModel: Debuggable, Hookable {
     // MARK: core
-    init(owner: SystemModel.ID, role: ObjectRole) {
+    init(owner: SystemModel.ID, role: ObjectRole, parent: ObjectID? = nil) {
         self.owner = owner
         self.role = role
+        self.parent = parent
         
         ObjectModelManager.register(self)
     }
@@ -27,31 +30,86 @@ public final class ObjectModel: Debuggable, Hookable {
     public nonisolated let id = ID()
     public nonisolated let owner: SystemModel.ID
     public nonisolated let target = ObjectID()
+    internal nonisolated let createdAt = Date.now
     
     public var name: String = "New Object"
-    
     public nonisolated let role: ObjectRole
     public internal(set) var parent: ObjectID!
-    public internal(set) var childs: [ObjectID] = []
+    public internal(set) var childs: Set<ObjectID> = []
     
     public internal(set) var states: [StateID: StateModel.ID] = [:]
     public internal(set) var actions: [ActionID: ActionModel.ID] = [:]
     public internal(set) var flows: [FlowID: FlowModel.ID] = [:]
     
     public var issue: (any IssueRepresentable)?
-    
     package var captureHook: Hook?
     package var computeHook: Hook?
     package var mutateHook: Hook?
     
     
     // MARK: action
-    public func createChildObject() async  { }
+    public func createChildObject() async  {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.objectModelIsDeleted)
+            logger.failure("ObjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        let systemModelRef = self.owner.ref!
+        
+        // mutate
+        let childObjectModelRef = ObjectModel(owner: self.owner,
+                                              role: .node,
+                                              parent: self.target)
+        systemModelRef.objects[childObjectModelRef.target] = childObjectModelRef.id
+        self.childs.insert(childObjectModelRef.target)
+    }
     
-    public func createNewState() async { }
-    public func createNewAction() async { }
+    public func createNewState() async {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.objectModelIsDeleted)
+            logger.failure("ObjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        // mutate
+        let stateModelRef = StateModel(owner: self.id)
+        self.states[stateModelRef.target] = stateModelRef.id
+    }
+    public func createNewAction() async {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.objectModelIsDeleted)
+            logger.failure("ObjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        // mutate
+        let actionModelRef = ActionModel(owner: self.id)
+        self.actions[actionModelRef.target] = actionModelRef.id
+    }
     
-    public func removeObject() async { }
+    public func removeObject() async {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.objectModelIsDeleted)
+            logger.failure("ObjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+    }
     
     
     // MARK: value
@@ -66,6 +124,10 @@ public final class ObjectModel: Debuggable, Hookable {
         public var ref: ObjectModel? {
             ObjectModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case objectModelIsDeleted
     }
 }
 

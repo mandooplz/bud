@@ -169,6 +169,11 @@ struct ProjectModelTests {
                 await #expect(systemModel.isExist == false)
             }
         }
+        @Test func deleteObjectModels() async throws {
+            // given
+            
+        }
+        
         @Test func deleteValueModels() async throws {
             // given
             try await #require(projectModelRef.values.isEmpty)
@@ -212,3 +217,5 @@ private func getProjectModel(_ budLocalRef: BudLocal) async throws -> ProjectMod
     
     return projectModelRef
 }
+ 
+

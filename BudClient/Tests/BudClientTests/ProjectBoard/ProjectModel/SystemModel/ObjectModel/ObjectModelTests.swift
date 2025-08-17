@@ -271,6 +271,7 @@ struct ObjectModelTests {
             await #expect(newObjectModel.isExist == true)
         }
         @Test func setNewObjectModelParentToSelfTarget() async throws {
+            // 새로운 ObjectModel의 Parent를 설정
             // given
             let systemModelRef = try #require(await objectModelRef.config.parent.ref)
             
@@ -298,6 +299,7 @@ struct ObjectModelTests {
             await #expect(newObjectModelRef.parent == objectModelRef.target)
         }
         @Test func appendNewObjectModelTargetinChilds() async throws {
+            // 현재 ObjectModel의 Childs에 추가
             // given
             let systemModelRef = try #require(await objectModelRef.config.parent.ref)
             

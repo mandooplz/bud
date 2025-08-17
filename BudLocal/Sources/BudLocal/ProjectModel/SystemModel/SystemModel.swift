@@ -39,9 +39,20 @@ public final class SystemModel: Debuggable, Hookable {
     
     public var root: ObjectModel.ID?
     public var objects: [ObjectID: ObjectModel.ID] = [:]
+    public var recentObject: ObjectModel.ID? {
+        // 1. 딕셔너리의 모든 ID 값들을 가져옵니다.
+        self.objects.values
+            // 2. 각 ID를 실제 ObjectModel로 변환합니다.
+            //    ref가 nil인 (유효하지 않은) ID는 이 과정에서 자동으로 걸러집니다.
+            .compactMap { $0.ref }
+            // 3. 유효한 ObjectModel 배열에서 createdAt이 가장 큰 객체를 찾습니다.
+            .max { $0.createdAt < $1.createdAt }?
+            // 4. 찾은 ObjectModel의 ID를 반환합니다.
+            //    만약 찾은 객체가 없다면(배열이 비어있었다면) nil이 됩니다.
+            .id
+    }
     
     public var issue: (any IssueRepresentable)?
-    
     package var captureHook: Hook?
     package var computeHook: Hook?
     package var mutateHook: Hook?
@@ -175,6 +186,9 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        
+        // mutate
+        self.delete()
     }
     
     
@@ -210,3 +224,4 @@ fileprivate final class SystemModelManager: Sendable {
         container[id] = nil
     }
 }
+

@@ -12,7 +12,7 @@ private let logger = BudLogger("ProjectModel")
 
 // MARK: Object
 @MainActor @Observable
-public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
+public final class ProjectModel: Debuggable, Hookable {
     // MARK: core
     init(owner: BudLocal.ID) {
         self.owner = owner
@@ -44,7 +44,6 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     }
     
     public var issue: (any IssueRepresentable)?
-    public var callback: Callback?
     package var captureHook: Hook?
     package var computeHook: Hook?
     package var mutateHook: Hook?

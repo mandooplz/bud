@@ -12,7 +12,9 @@ import ValueSuite
 @MainActor @Observable
 public final class StateModel: Debuggable, Hookable {
     // MARK: core
-    init() {
+    init(owner: ObjectModel.ID) {
+        self.owner = owner
+        
         StateModelManager.register(self)
     }
     func delete() {
@@ -22,6 +24,7 @@ public final class StateModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: ObjectModel.ID
     public nonisolated let target = StateID()
     
     public var name: String = "New State"

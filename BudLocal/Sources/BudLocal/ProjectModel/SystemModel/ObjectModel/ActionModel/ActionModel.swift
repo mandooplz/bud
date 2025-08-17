@@ -14,7 +14,9 @@ private let logger = BudLogger("ActionModel")
 @MainActor @Observable
 public final class ActionModel: Debuggable, Hookable {
     // MARK: core
-    init() {
+    init(owner: ObjectModel.ID) {
+        self.owner = owner
+        
         ActionModelManager.register(self)
     }
     func delete() {
@@ -24,12 +26,14 @@ public final class ActionModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: ObjectModel.ID
     public nonisolated let target = ActionID()
     
     public var name: String = "New Action"
     
     // Action에 영향을 미치는 범위
-    public var sideEffects: Set<SideEffect> = []
+    public internal(set) var failureEffects: Set<SideEffect> = []
+    public internal(set) var successEffects: Set<SideEffect> = []
     public var objectSelection: ObjectID? = nil
     public var effectSelection: SideEffect.Diff? = nil
     
@@ -43,8 +47,11 @@ public final class ActionModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func addSideEffect() async {
-        
+    public func addFailureEffect() async {
+        fatalError()
+    }
+    public func addSuccessEffect() async {
+        fatalError()
     }
     
     public func duplicateAction() async {
