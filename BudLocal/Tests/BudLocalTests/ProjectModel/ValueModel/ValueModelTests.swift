@@ -6,6 +6,7 @@
 //
 import Foundation
 import Testing
+import ValueSuite
 @testable import BudLocal
 
 
@@ -19,6 +20,33 @@ struct ValueModelTests {
             self.budLocalRef = await BudLocal()
             self.valueModelRef = try await getValueModel(budLocalRef)
         }
+        
+        @Test func whenValueModelIsDeleted() async throws {
+            // given
+            try await #require(valueModelRef.id.isExist == true)
+            
+            await valueModelRef.setCaptureHook {
+                await valueModelRef.delete()
+            }
+            
+            // when
+            await valueModelRef.removeValue()
+            
+            // then
+            let issue = try #require(await valueModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "valueModelIsDeleted")
+        }
+        
+        @Test func deleteValueModel() async throws {
+            // given
+            try await #require(valueModelRef.id.isExist == true)
+            
+            // when
+            await valueModelRef.removeValue()
+            
+            // then
+            await #expect(valueModelRef.id.isExist == false)
+        }
     }
 }
 
@@ -26,10 +54,22 @@ struct ValueModelTests {
 // MARK: Helphers
 private func getValueModel(_ budLocalRef: BudLocal) async throws -> ValueModel {
     // create ProjectModel
+    try await #require(budLocalRef.projects.count == 0)
+    
+    await budLocalRef.createProject()
+    
+    try await #require(budLocalRef.projects.count == 1)
     
     
     // create ValueModel
+    let projectModelRef = try #require(await budLocalRef.projects.values.first?.ref)
     
-    fatalError()
+    await projectModelRef.createValue()
+    
+    
+    // return
+    let valueModel = try #require(await projectModelRef.values.values.first)
+    let valueModelRef = try #require(await valueModel.ref)
+    return valueModelRef
 }
 

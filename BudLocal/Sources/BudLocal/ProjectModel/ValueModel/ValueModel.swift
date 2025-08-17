@@ -48,11 +48,14 @@ public final class ValueModel: Debuggable, Hookable {
         logger.start()
         
         // capture
+        await captureHook?()
         guard id.isExist else {
             setIssue(Error.valueModelIsDeleted)
             logger.failure("ValueModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        
+        self.delete()
     }
     
     

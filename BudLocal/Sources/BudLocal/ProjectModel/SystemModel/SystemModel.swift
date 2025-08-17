@@ -51,34 +51,70 @@ public final class SystemModel: Debuggable, Hookable {
     public func addSystemRight() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     public func addSystemLeft() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     public func addSystemTop() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     public func addSystemBottom() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     
     public func createRootObject() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     
     public func removeSystem() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.systemModelIsDeleted)
+            logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
     }
     
     
@@ -94,6 +130,9 @@ public final class SystemModel: Debuggable, Hookable {
         public var ref: SystemModel? {
             SystemModelManager.container[self]
         }
+    }
+    public enum Error: String, Swift.Error {
+        case systemModelIsDeleted
     }
 }
 
