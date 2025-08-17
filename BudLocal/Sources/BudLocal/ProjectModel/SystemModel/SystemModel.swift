@@ -30,10 +30,6 @@ public final class SystemModel: Debuggable, Hookable {
     public nonisolated let owner: ProjectModel.ID
     public nonisolated let target = SystemID()
     
-    public nonisolated let createdAt: Date = .now
-    public var updatedAt: Date = .now
-    public var order: Int = 0
-    
     public var name: String = "New System"
     public var location: Location
     

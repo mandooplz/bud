@@ -30,7 +30,10 @@ public final class ObjectModel: Debuggable, Hookable {
     public nonisolated let id = ID()
     public nonisolated let owner: SystemModel.ID
     public nonisolated let target = ObjectID()
-    internal nonisolated let createdAt = Date.now
+    
+    internal nonisolated let createdAt: Date = .now
+    public var updatedAt: Date = .now
+    public var order: Int = 0
     
     public var name: String = "New Object"
     public nonisolated let role: ObjectRole
@@ -109,7 +112,56 @@ public final class ObjectModel: Debuggable, Hookable {
             logger.failure("ObjectModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let systemModelRef = self.owner.ref!
+        
+        // mutate
+        cleanUpStateModels(self)
+        cleanUpActionModels(self)
+        cleanUpChildObjectModel(systemModelRef, self)
+        
+        if self.role == .root {
+            systemModelRef.root = nil
+        }
+        systemModelRef.objects[self.target] = nil
+        self.delete()
     }
+    
+    
+    // MARK: helpher
+    private func cleanUpActionModels(_ objectModelRef: ObjectModel) {
+        objectModelRef.actions.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+    }
+    private func cleanUpStateModels(_ objectModelRef: ObjectModel) {
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .forEach {
+                $0.getters.values
+                    .compactMap { $0.ref }
+                    .forEach { $0.delete() }
+                
+                $0.setters.values
+                    .compactMap { $0.ref }
+                    .forEach { $0.delete() }
+                
+                $0.delete()
+            }
+    }
+    private func cleanUpChildObjectModel(_ systemModelRef: SystemModel,
+                                         _ objectModelRef: ObjectModel) {
+        
+        objectModelRef.childs
+            .compactMap { systemModelRef.objects[$0]?.ref }
+            .forEach { childObjectModelRef in
+                cleanUpChildObjectModel(systemModelRef, childObjectModelRef)
+                
+                cleanUpActionModels(childObjectModelRef)
+                cleanUpStateModels(childObjectModelRef)
+                childObjectModelRef.delete()
+            }
+    }
+    
     
     
     // MARK: value

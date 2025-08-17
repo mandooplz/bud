@@ -14,7 +14,9 @@ private let logger = BudLogger("SetterModel")
 @MainActor @Observable
 public final class SetterModel: Debuggable, Hookable {
     // MARK: core
-    init() {
+    init(owner: StateModel.ID) {
+        self.owner = owner
+        
         SetterModelManager.register(self)
     }
     func delete() {
@@ -24,7 +26,12 @@ public final class SetterModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: StateModel.ID
     public nonisolated let target = SetterID()
+    
+    internal nonisolated let createdAt: Date = .now
+    public var updatedAt: Date = .now
+    public var order: Int = 0
     
     public var name: String = "New Setter"
     public var parameters: [ParameterValue] = []

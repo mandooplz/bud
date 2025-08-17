@@ -14,7 +14,8 @@ private let logger = BudLogger("FlowModel")
 @MainActor @Observable
 public final class FlowModel: Sendable {
     // MARK: core
-    init(action: ActionID) {
+    init(owner: ObjectModel.ID, action: ActionID) {
+        self.owner = owner
         self.action = action
         
         FlowModelManager.register(self)
@@ -26,7 +27,12 @@ public final class FlowModel: Sendable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: ObjectModel.ID
     public nonisolated let target = FlowID()
+    
+    internal nonisolated let createdAt: Date = .now
+    public var updatedAt: Date = .now
+    public var order: Int = 0
     
     public var name: String = "New Flow"
     

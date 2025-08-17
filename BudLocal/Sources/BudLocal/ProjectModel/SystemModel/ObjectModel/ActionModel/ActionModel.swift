@@ -29,16 +29,21 @@ public final class ActionModel: Debuggable, Hookable {
     public nonisolated let owner: ObjectModel.ID
     public nonisolated let target = ActionID()
     
+    internal nonisolated let createdAt: Date = .now
+    public var updatedAt: Date = .now
+    public var order: Int = 0
+    
     public var name: String = "New Action"
     
     // Action에 영향을 미치는 범위
     public internal(set) var failureEffects: Set<SideEffect> = []
     public internal(set) var successEffects: Set<SideEffect> = []
-    public var objectSelection: ObjectID? = nil
-    public var effectSelection: SideEffect.Diff? = nil
+    public var selectedObject: ObjectID? = nil
+    public var selectedEffect: SideEffect.Diff? = nil
     
     // Action이 호출하는 외부 Flow들
     public internal(set) var linkedFlows: [FlowID] = []
+    public var selectedExternalFlow: FlowID? = nil
     
     public var issue: (any IssueRepresentable)?
     package var captureHook: Hook?
@@ -54,10 +59,15 @@ public final class ActionModel: Debuggable, Hookable {
         fatalError()
     }
     
-    public func duplicateAction() async {
+    public func createFlow() async {
+        logger.start()
+        
         fatalError()
     }
-    public func createFlow() async {
+    public func linkFlow() async {
+        logger.start()
+        
+        // selectedExternalFlow를 이용해 linkedFlows 추가
         fatalError()
     }
     

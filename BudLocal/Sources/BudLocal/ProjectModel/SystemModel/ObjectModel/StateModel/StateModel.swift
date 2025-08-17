@@ -7,6 +7,8 @@
 import Foundation
 import ValueSuite
 
+private let logger = BudLogger("StateModel")
+
 
 // MARK: Object
 @MainActor @Observable
@@ -27,6 +29,10 @@ public final class StateModel: Debuggable, Hookable {
     public nonisolated let owner: ObjectModel.ID
     public nonisolated let target = StateID()
     
+    internal nonisolated let createdAt: Date = .now
+    public var updatedAt: Date = .now
+    public var order: Int = 0
+    
     public var name: String = "New State"
     public internal(set) var accessLevel: AccessLevel = .readAndWrite
     public internal(set) var stateValue: StateValue?
@@ -42,23 +48,58 @@ public final class StateModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func setUpAccessor() async {
-        fatalError()
+    public func createGetter() async {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.stateModelIsDeleted)
+            logger.failure("StateModel이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        
+        // mutate
+        let getterModelRef = GetterModel(owner: self.id)
+        self.getters[getterModelRef.target] = getterModelRef.id
     }
-    
-    public func appendGetter() async {
-        fatalError()
-    }
-    public func appendSetter() async {
-        fatalError()
-    }
-    
-    public func duplicateState() async {
-        fatalError()
+    public func createSetter() async {
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.stateModelIsDeleted)
+            logger.failure("StateModel이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        
+        // mutate
+        let setterModelRef = SetterModel(owner: self.id)
+        self.setters[setterModelRef.target] = setterModelRef.id
     }
     
     public func removeState() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.stateModelIsDeleted)
+            logger.failure("StateModel이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        
+        // mutate
+        self.getters.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        self.setters.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        self.delete()
     }
     
     
@@ -74,6 +115,10 @@ public final class StateModel: Debuggable, Hookable {
         public var ref: StateModel? {
             StateModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case stateModelIsDeleted
     }
 }
 
