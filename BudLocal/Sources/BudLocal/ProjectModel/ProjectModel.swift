@@ -14,7 +14,9 @@ private let logger = BudLogger("ProjectModel")
 @MainActor @Observable
 public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     // MARK: core
-    init() {
+    init(owner: BudLocal.ID) {
+        self.owner = owner
+        
         ProjectModelManager.register(self)
     }
     func delete() {
@@ -24,15 +26,16 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: BudLocal.ID
     public nonisolated let target = ProjectID()
     
     public var name: String = "New Project"
+    
     public var systems: [SystemID: SystemModel.ID] = [:]
     public var values: [ValueID: ValueModel.ID] = [:]
     
     public var issue: (any IssueRepresentable)?
     public var callback: Callback?
-    
     package var captureHook: Hook?
     package var computeHook: Hook?
     package var mutateHook: Hook?
@@ -42,18 +45,56 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     public func createFirstSystem() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.projectModelIsDeleted)
+            logger.failure("ProjectModel이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        guard systems.isEmpty else {
+            setIssue(Error.systemAlreadyExist)
+            logger.failure("첫 번째 시스템이 이미 존재합니다.")
+            return
+        }
+        
+        let systemModelRef = SystemModel(owner: self.id,
+                                         location: .origin)
+        self.systems[systemModelRef.target] = systemModelRef.id
     }
     public func createValue() async {
         logger.start()
         
-        fatalError()
+        // mutate
+        await mutateHook?()
+        guard id.isExist else {
+            setIssue(Error.projectModelIsDeleted)
+            logger.failure("ProjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        let valueModelRef = ValueModel(owner: self.id)
+        self.values[valueModelRef.target] = valueModelRef.id
+        
     }
     
     public func removeProject() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.projectModelIsDeleted)
+            logger.failure("ProjectModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        // mutate
+        self.systems.values
+            .forEach { $0.ref?.delete() }
+        self.values.values
+            .forEach { $0.ref?.delete() }
+        self.delete()
     }
     
     
@@ -69,6 +110,11 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
         public var ref: ProjectModel? {
             ProjectModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case projectModelIsDeleted
+        case systemAlreadyExist
     }
 }
 

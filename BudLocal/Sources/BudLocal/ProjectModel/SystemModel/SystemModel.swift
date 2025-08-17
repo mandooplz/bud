@@ -14,7 +14,8 @@ private let logger = BudLogger("SystemModel")
 @MainActor @Observable
 public final class SystemModel: Debuggable, Hookable {
     // MARK: core
-    init(location: Location) {
+    init(owner: ProjectModel.ID, location: Location) {
+        self.owner = owner
         self.location = location
         
         SystemModelManager.register(self)
@@ -26,6 +27,7 @@ public final class SystemModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: ProjectModel.ID
     public nonisolated let target = SystemID()
     
     public nonisolated let createdAt: Date = .now

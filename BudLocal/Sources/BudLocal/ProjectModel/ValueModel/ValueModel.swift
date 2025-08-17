@@ -14,7 +14,9 @@ private let logger = BudLogger("ValueModel")
 @MainActor @Observable
 public final class ValueModel: Debuggable, Hookable {
     // MARK: core
-    init() {
+    init(owner: ProjectModel.ID) {
+        self.owner = owner
+        
         ValueModelManager.register(self)
     }
     func delete() {
@@ -24,6 +26,7 @@ public final class ValueModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: ProjectModel.ID
     public nonisolated let target = ValueID()
     
     public nonisolated let createdAt = Date.now
@@ -41,7 +44,16 @@ public final class ValueModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func removeValue() async { }
+    public func removeValue() async {
+        logger.start()
+        
+        // capture
+        guard id.isExist else {
+            setIssue(Error.valueModelIsDeleted)
+            logger.failure("ValueModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+    }
     
     
     // MARK: value
@@ -56,6 +68,9 @@ public final class ValueModel: Debuggable, Hookable {
         public var ref: ValueModel? {
             ValueModelManager.container[self]
         }
+    }
+    public enum Error: String, Swift.Error {
+        case valueModelIsDeleted
     }
 }
 

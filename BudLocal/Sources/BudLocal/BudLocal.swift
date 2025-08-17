@@ -12,7 +12,7 @@ private let logger = BudLogger("BudLocal")
 
 // MARK: Object
 @MainActor
-public final class BudLocal: Debuggable {
+public final class BudLocal: Debuggable, Hookable {
     // MARK: core
     public init() {
         BudLocalManager.register(self)
@@ -29,10 +29,25 @@ public final class BudLocal: Debuggable {
     
     public var issue: (any IssueRepresentable)?
     
+    package var captureHook: Hook?
+    package var computeHook: Hook?
+    package var mutateHook: Hook?
+    
     
     // MARK: action
     public func createProject() async {
-        fatalError()
+        logger.start()
+        
+        // mutate
+        await mutateHook?()
+        guard id.isExist else {
+            setIssue(Error.budLocalIsDeleted)
+            logger.failure("BudLocal이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        
+        let projectModelRef = ProjectModel(owner: self.id)
+        self.projects[projectModelRef.target] = projectModelRef.id
     }
     
     
@@ -48,6 +63,10 @@ public final class BudLocal: Debuggable {
         public var ref: BudLocal? {
             BudLocalManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case budLocalIsDeleted
     }
 }
 

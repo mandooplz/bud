@@ -7,6 +7,8 @@
 import Foundation
 import ValueSuite
 
+private let logger = BudLogger("ActionModel")
+
 
 // MARK: Object
 @MainActor @Observable
@@ -26,11 +28,12 @@ public final class ActionModel: Debuggable, Hookable {
     
     public var name: String = "New Action"
     
-    // Action에 영향 범위
+    // Action에 영향을 미치는 범위
     public var sideEffects: Set<SideEffect> = []
+    public var objectSelection: ObjectID? = nil
+    public var effectSelection: SideEffect.Diff? = nil
     
-    // Action이 호출하는 외부 시스템의 Flow
-    // 이를 굳이 설명할 필요가 있을까?
+    // Action이 호출하는 외부 Flow들
     public internal(set) var linkedFlows: [FlowID] = []
     
     public var issue: (any IssueRepresentable)?
@@ -40,6 +43,10 @@ public final class ActionModel: Debuggable, Hookable {
     
     
     // MARK: action
+    public func addSideEffect() async {
+        
+    }
+    
     public func duplicateAction() async {
         fatalError()
     }
