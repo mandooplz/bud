@@ -7,6 +7,8 @@
 import Foundation
 import ValueSuite
 
+private let logger = BudLogger("SystemModel")
+
 
 // MARK: Object
 @MainActor @Observable
@@ -45,23 +47,35 @@ public final class SystemModel: Debuggable, Hookable {
     
     // MARK: action
     public func addSystemRight() async {
+        logger.start()
+        
         fatalError()
     }
     public func addSystemLeft() async {
+        logger.start()
+        
         fatalError()
     }
     public func addSystemTop() async {
+        logger.start()
+        
         fatalError()
     }
     public func addSystemBottom() async {
+        logger.start()
+        
         fatalError()
     }
     
     public func createRootObject() async {
+        logger.start()
+        
         fatalError()
     }
     
     public func removeSystem() async {
+        logger.start()
+        
         fatalError()
     }
     

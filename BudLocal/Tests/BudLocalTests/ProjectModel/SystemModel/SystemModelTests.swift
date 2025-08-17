@@ -1,5 +1,5 @@
 //
-//  BudLocalTests.swift
+//  SystemModelTests.swift
 //  BudLocal
 //
 //  Created by 김민우 on 8/17/25.
@@ -10,7 +10,11 @@ import Testing
 
 
 // MARK: Tests
-@Suite("BudLocal", .timeLimit(.minutes(1)))
-struct BudLocalTests {
+@Suite("SystemModel", .timeLimit(.minutes(1)))
+struct SystemModelTests {
     
 }
+
+
+// MARK: Helphers
+

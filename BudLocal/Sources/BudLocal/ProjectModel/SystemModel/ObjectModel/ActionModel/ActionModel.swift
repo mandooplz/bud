@@ -26,9 +26,11 @@ public final class ActionModel: Debuggable, Hookable {
     
     public var name: String = "New Action"
     
-    public internal(set) var captureStates: Set<StateID> = []
-    public internal(set) var mutateStates: Set<StateID> = []
+    // Action에 영향 범위
+    public var sideEffects: Set<SideEffect> = []
     
+    // Action이 호출하는 외부 시스템의 Flow
+    // 이를 굳이 설명할 필요가 있을까?
     public internal(set) var linkedFlows: [FlowID] = []
     
     public var issue: (any IssueRepresentable)?
@@ -61,6 +63,17 @@ public final class ActionModel: Debuggable, Hookable {
         }
         public var ref: ActionModel? {
             ActionModelManager.container[self]
+        }
+    }
+    
+    public struct SideEffect: Sendable, Hashable {
+        public let object: ObjectID
+        public let diff: Diff
+        
+        public enum Diff: Sendable, Hashable {
+            case create
+            case modify(StateID)
+            case delete
         }
     }
 }

@@ -9,11 +9,20 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "BudLocal",
+          "name" : "BudLocal"
+        }
+      ]
+    },
     "performanceAntipatternCheckerEnabled" : true
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:",
         "identifier" : "BudLocalTests",

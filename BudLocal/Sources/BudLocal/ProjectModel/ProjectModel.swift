@@ -7,6 +7,8 @@
 import Foundation
 import ValueSuite
 
+private let logger = BudLogger("ProjectModel")
+
 
 // MARK: Object
 @MainActor @Observable
@@ -37,10 +39,22 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     
     
     // MARK: action
-    public func createFirstSystem() async { }
-    public func createValue() async { }
+    public func createFirstSystem() async {
+        logger.start()
+        
+        fatalError()
+    }
+    public func createValue() async {
+        logger.start()
+        
+        fatalError()
+    }
     
-    public func removeProject() async { }
+    public func removeProject() async {
+        logger.start()
+        
+        fatalError()
+    }
     
     
     // MARK: value
