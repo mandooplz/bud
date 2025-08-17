@@ -16,9 +16,11 @@ struct SystemModelTests {
     struct AddSystemRight {
         let budLocalRef: BudLocal
         let systemModelRef: SystemModel
+        let projectModelRef: ProjectModel
         init() async throws {
             self.budLocalRef = await BudLocal()
             self.systemModelRef = try await getSystemModel(budLocalRef)
+            self.projectModelRef = try #require(await systemModelRef.owner.ref)
         }
         
         @Test func whenSystemModelIsDeleted() async throws {
@@ -36,14 +38,58 @@ struct SystemModelTests {
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
         }
+        
+        @Test func appendSystemModel() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            // when
+            await systemModelRef.addSystemRight()
+            
+            // then
+            await #expect(projectModelRef.systems.count == 2)
+        }
+        @Test func createSystemModelAtRightLocation() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let rightLocation = await systemModelRef.location.getRight()
+            
+            // when
+            await systemModelRef.addSystemRight()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 2)
+            
+            let newSystemModel = try #require(await projectModelRef.getSystemModel(rightLocation))
+            await #expect(newSystemModel.isExist == true)
+        }
+        
+        @Test func whenSystemAlreadyExistAtRightLocation() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            await systemModelRef.addSystemRight()
+            
+            try await #require(projectModelRef.systems.count == 2)
+            
+            // when
+            await systemModelRef.addSystemRight()
+            
+            // then
+            let issue = try #require(await systemModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "systemAlreadyExist")
+        }
     }
     
     struct AddSystemLeft {
         let budLocalRef: BudLocal
         let systemModelRef: SystemModel
+        let projectModelRef: ProjectModel
         init() async throws {
             self.budLocalRef = await BudLocal()
             self.systemModelRef = try await getSystemModel(budLocalRef)
+            self.projectModelRef = try #require(await systemModelRef.owner.ref)
         }
         
         @Test func whenSystemModelIsDeleted() async throws {
@@ -61,14 +107,32 @@ struct SystemModelTests {
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
         }
+        
+        @Test func whenSystemAlreadyExistAtLeftLocation() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            await systemModelRef.addSystemLeft()
+            
+            try await #require(projectModelRef.systems.count == 2)
+            
+            // when
+            await systemModelRef.addSystemLeft()
+            
+            // then
+            let issue = try #require(await systemModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "systemAlreadyExist")
+        }
     }
     
     struct AddSystemTop {
         let budLocalRef: BudLocal
         let systemModelRef: SystemModel
+        let projectModelRef: ProjectModel
         init() async throws {
             self.budLocalRef = await BudLocal()
             self.systemModelRef = try await getSystemModel(budLocalRef)
+            self.projectModelRef = try #require(await systemModelRef.owner.ref)
         }
         
         @Test func whenSystemModelIsDeleted() async throws {
@@ -91,9 +155,11 @@ struct SystemModelTests {
     struct AddSystemBottom {
         let budLocalRef: BudLocal
         let systemModelRef: SystemModel
+        let projectModelRef: ProjectModel
         init() async throws {
             self.budLocalRef = await BudLocal()
             self.systemModelRef = try await getSystemModel(budLocalRef)
+            self.projectModelRef = try #require(await systemModelRef.owner.ref)
         }
         
         @Test func whenSystemModelIsDeleted() async throws {

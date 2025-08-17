@@ -58,6 +58,19 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let rightLocation = self.location.getRight()
+        let projectModelRef = self.owner.ref!
+        
+        // mutate
+        guard projectModelRef.isLocationExist(rightLocation) == false else {
+            setIssue(Error.systemAlreadyExist)
+            logger.failure("(\(rightLocation.x), \(rightLocation.y)) 위치에 System이 이미 존재합니다.")
+            return
+        }
+        
+        let systemModelRef = SystemModel(owner: owner,
+                                         location: rightLocation)
+        projectModelRef.systems[systemModelRef.target] = systemModelRef.id
     }
     public func addSystemLeft() async {
         logger.start()
@@ -69,6 +82,18 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let leftLocation = self.location.getLeft()
+        let projectModelRef = self.owner.ref!
+        
+        // mutate
+        guard projectModelRef.isLocationExist(leftLocation) == false else {
+            setIssue(Error.systemAlreadyExist)
+            logger.failure("(\(leftLocation.x), \(leftLocation.y)) 위치에 System이 이미 존재합니다.")
+            return
+        }
+        
+        let systemModelRef = SystemModel(owner: owner, location: leftLocation)
+        projectModelRef.systems[systemModelRef.target] = systemModelRef.id
     }
     public func addSystemTop() async {
         logger.start()
@@ -133,6 +158,8 @@ public final class SystemModel: Debuggable, Hookable {
     }
     public enum Error: String, Swift.Error {
         case systemModelIsDeleted
+        case systemAlreadyExist
+        case rootObjectAlreadyExist
     }
 }
 

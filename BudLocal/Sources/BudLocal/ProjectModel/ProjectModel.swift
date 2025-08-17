@@ -33,6 +33,15 @@ public final class ProjectModel: Debuggable, EventDebuggable, Hookable {
     
     public var systems: [SystemID: SystemModel.ID] = [:]
     public var values: [ValueID: ValueModel.ID] = [:]
+    internal func getSystemModel(_ location: Location) -> SystemModel.ID? {
+        self.systems.values
+            .first { $0.ref?.location == location }
+    }
+    internal func isLocationExist(_ location: Location) -> Bool {
+        self.systems.values
+            .compactMap { $0.ref }
+            .contains { $0.location == location }
+    }
     
     public var issue: (any IssueRepresentable)?
     public var callback: Callback?
