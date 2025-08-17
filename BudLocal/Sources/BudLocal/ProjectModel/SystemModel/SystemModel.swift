@@ -105,6 +105,19 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let topLocation = location.getTop()
+        let projectModelRef = self.owner.ref!
+        
+        // mutate
+        guard projectModelRef.isLocationExist(topLocation) == false else {
+            setIssue(Error.systemAlreadyExist)
+            logger.failure("(\(topLocation.x), \(topLocation.y)) 위치에 System이 이미 존재합니다.")
+            return
+        }
+        
+        let systemModelRef = SystemModel(owner: owner,
+                                         location: topLocation)
+        projectModelRef.systems[systemModelRef.target] = systemModelRef.id
     }
     public func addSystemBottom() async {
         logger.start()
@@ -116,6 +129,17 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let bottomLocation = self.location.getBotttom()
+        let projectModelRef = self.owner.ref!
+        
+        // mutate
+        guard projectModelRef.isLocationExist(bottomLocation) == false else {
+            setIssue(Error.systemAlreadyExist)
+            logger.failure("(\(bottomLocation.x), \(bottomLocation.y)) 위치에 System이 이미 존재합니다.")
+            return
+        }
+        let systemModelRef = SystemModel(owner: owner, location: bottomLocation)
+        projectModelRef.systems[systemModelRef.target] = systemModelRef.id
     }
     
     public func createRootObject() async {
@@ -128,6 +152,17 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        guard self.root == nil else {
+            setIssue(Error.rootObjectModelAlreadyExist)
+            logger.failure("이미 Root에 해당하는 ObjectModel이 존재합니다.")
+            return
+        }
+        
+        // mutate
+        let objectModelRef = ObjectModel(owner: self.id,
+                                         role: .root)
+        self.root = objectModelRef.id
+        self.objects[objectModelRef.target] = objectModelRef.id
     }
     
     public func removeSystem() async {
@@ -159,7 +194,7 @@ public final class SystemModel: Debuggable, Hookable {
     public enum Error: String, Swift.Error {
         case systemModelIsDeleted
         case systemAlreadyExist
-        case rootObjectAlreadyExist
+        case rootObjectModelAlreadyExist
     }
 }
 

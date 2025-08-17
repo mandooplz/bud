@@ -108,6 +108,30 @@ struct SystemModelTests {
             #expect(issue.reason == "systemModelIsDeleted")
         }
         
+        @Test func appendSystemModel() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            // when
+            await systemModelRef.addSystemLeft()
+            
+            // then
+            await #expect(projectModelRef.systems.count == 2)
+        }
+        @Test func createSystemModelAtLeftLocation() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let leftLocation = await systemModelRef.location.getLeft()
+            
+            // when
+            await systemModelRef.addSystemLeft()
+            
+            // then
+            let newSystemModel = try #require(await projectModelRef.getSystemModel(leftLocation))
+            await #expect(newSystemModel.isExist == true)
+        }
+        
         @Test func whenSystemAlreadyExistAtLeftLocation() async throws {
             // given
             try await #require(projectModelRef.systems.count == 1)
@@ -150,6 +174,40 @@ struct SystemModelTests {
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
         }
+        
+        @Test func appendSystemModel() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            // when
+            await systemModelRef.addSystemTop()
+            
+            // then
+            await #expect(projectModelRef.systems.count == 2)
+        }
+        @Test func createSystemModelAtTopLocation() async throws {
+            // given
+            let topLocation = await systemModelRef.location.getTop()
+            
+            // when
+            await systemModelRef.addSystemTop()
+            
+            // then
+            let newSystemModel = try #require(await projectModelRef.getSystemModel(topLocation))
+            await #expect(newSystemModel.isExist == true)
+        }
+        
+        @Test func whenSystemAlreadyExistAtTopLocation() async throws {
+            // given
+            await systemModelRef.addSystemTop()
+            
+            // when
+            await systemModelRef.addSystemTop()
+            
+            // then
+            let issue = try #require(await systemModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "systemAlreadyExist")
+        }
     }
     
     struct AddSystemBottom {
@@ -177,6 +235,40 @@ struct SystemModelTests {
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
         }
+        
+        @Test func appendSystemModel() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            // when
+            await systemModelRef.addSystemBottom()
+            
+            // then
+            await #expect(projectModelRef.systems.count == 2)
+        }
+        @Test func createSystemModelAtTopLocation() async throws {
+            // given
+            let bottomLocation = await systemModelRef.location.getBotttom()
+            
+            // when
+            await systemModelRef.addSystemBottom()
+            
+            // then
+            let newSystemModel = try #require(await projectModelRef.getSystemModel(bottomLocation))
+            await #expect(newSystemModel.isExist == true)
+        }
+        
+        @Test func whenSystemAlreadyExistAtTopLocation() async throws {
+            // given
+            await systemModelRef.addSystemBottom()
+            
+            // when
+            await systemModelRef.addSystemBottom()
+            
+            // then
+            let issue = try #require(await systemModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "systemAlreadyExist")
+        }
     }
     
     struct CreateRootObject {
@@ -201,6 +293,55 @@ struct SystemModelTests {
             // then
             let issue = try #require(await systemModelRef.issue as? KnownIssue)
             #expect(issue.reason == "systemModelIsDeleted")
+        }
+        
+        @Test func setRoot() async throws {
+            // given
+            try await #require(systemModelRef.root == nil)
+            
+            // when
+            await systemModelRef.createRootObject()
+            
+            // then
+            try await #require(systemModelRef.issue == nil)
+            
+            await #expect(systemModelRef.root != nil)
+        }
+        @Test func appendObjectModelInObjects() async throws {
+            // given
+            try await #require(systemModelRef.objects.isEmpty)
+            
+            // when
+            await systemModelRef.createRootObject()
+            
+            // then
+            await #expect(systemModelRef.objects.count == 1)
+        }
+        @Test func createObjectModel() async throws {
+            // given
+            try await #require(systemModelRef.objects.isEmpty)
+            
+            // when
+            await systemModelRef.createRootObject()
+            
+            // then
+            let newObjectModel = try #require(await systemModelRef.objects.values.first)
+            await #expect(newObjectModel.isExist == true)
+        }
+        
+        @Test func whenRootObjectModelAlreadyExist() async throws {
+            // given
+            await systemModelRef.createRootObject()
+            
+            try await #require(systemModelRef.isIssueOccurred == false)
+            
+            // when
+            await systemModelRef.createRootObject()
+            
+            // then
+            let issue = try #require(await systemModelRef.issue as? KnownIssue)
+            #expect(issue.reason == "rootObjectModelAlreadyExist")
+            
         }
     }
     

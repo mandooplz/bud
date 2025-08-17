@@ -12,7 +12,8 @@ import ValueSuite
 @MainActor @Observable
 public final class ObjectModel: Debuggable, Hookable {
     // MARK: core
-    init(role: ObjectRole) {
+    init(owner: SystemModel.ID, role: ObjectRole) {
+        self.owner = owner
         self.role = role
         
         ObjectModelManager.register(self)
@@ -24,6 +25,7 @@ public final class ObjectModel: Debuggable, Hookable {
     
     // MARK: state
     public nonisolated let id = ID()
+    public nonisolated let owner: SystemModel.ID
     public nonisolated let target = ObjectID()
     
     public var name: String = "New Object"
