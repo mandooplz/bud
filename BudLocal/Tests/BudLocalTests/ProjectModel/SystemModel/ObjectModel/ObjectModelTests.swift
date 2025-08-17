@@ -451,7 +451,7 @@ private func getObjectModel(_ budLocalRef: BudLocal) async throws -> ObjectModel
     let systemModel = try #require(await projectModelRef.systems.values.first)
     let systemModelRef = try #require(await systemModel.ref)
     
-    // create ObjectMdel
+    // create ObjectModel
     try await #require(systemModelRef.objects.isEmpty)
     
     await systemModelRef.createRootObject()

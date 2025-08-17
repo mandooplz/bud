@@ -53,26 +53,77 @@ public final class ActionModel: Debuggable, Hookable {
     
     // MARK: action
     public func addFailureEffect() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.actionModelIsDeleted)
+            logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        logger.failure("구현이 필요합니다.")
     }
     public func addSuccessEffect() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.actionModelIsDeleted)
+            logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        logger.failure("구현이 필요합니다.")
     }
     
     public func createFlow() async {
         logger.start()
         
-        fatalError()
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.actionModelIsDeleted)
+            logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        logger.failure("구현이 필요합니다.")
     }
     public func linkFlow() async {
         logger.start()
         
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.actionModelIsDeleted)
+            logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        
+        // mutate
         // selectedExternalFlow를 이용해 linkedFlows 추가
-        fatalError()
+        logger.failure("구현이 필요합니다.")
     }
     
     public func removeAction() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.actionModelIsDeleted)
+            logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        let objectModelRef = self.owner.ref!
+        
+        
+        // mutate
+        objectModelRef.actions[self.target] = nil
+        self.delete()
     }
     
     
@@ -99,6 +150,10 @@ public final class ActionModel: Debuggable, Hookable {
             case modify(StateID)
             case delete
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case actionModelIsDeleted
     }
 }
 

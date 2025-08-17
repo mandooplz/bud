@@ -41,7 +41,6 @@ public final class StateModel: Debuggable, Hookable {
     public internal(set) var setters: [SetterID: SetterModel.ID] = [:]
     
     public var issue: (any IssueRepresentable)?
-    
     package var captureHook: Hook?
     package var computeHook: Hook?
     package var mutateHook: Hook?

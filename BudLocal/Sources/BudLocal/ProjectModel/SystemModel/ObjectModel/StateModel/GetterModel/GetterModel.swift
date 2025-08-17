@@ -44,7 +44,7 @@ public final class GetterModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func duplicateGetter() async {
+    public func duplicate() async {
         fatalError()
     }
     
