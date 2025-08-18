@@ -182,9 +182,54 @@ public final class SystemModel: Debuggable, Hookable {
             logger.failure("SystemModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let projectModelRef = self.owner.ref!
         
         // mutate
+        self.objects.values
+            .compactMap { $0.ref }
+            .forEach { cleanUpObjectModel($0) }
+        
+        projectModelRef.systems[self.target] = nil
         self.delete()
+    }
+    
+    
+    // MARK: helpher
+    private func cleanUpObjectModel(_ objectModelRef: ObjectModel) {
+        // delete GetterModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .flatMap { $0.getters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete SetterModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .flatMap { $0.setters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete StateModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete ActioModel
+        objectModelRef.actions.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete FlowModel
+        objectModelRef.flows.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete ObjectModel
+        objectModelRef.delete()
     }
     
     
