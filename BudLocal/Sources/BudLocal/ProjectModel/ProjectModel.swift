@@ -96,13 +96,64 @@ public final class ProjectModel: Debuggable, Hookable {
             logger.failure("ProjectModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let budLocalRef = self.owner.ref!
         
         // mutate
         self.systems.values
-            .forEach { $0.ref?.delete() }
+            .compactMap { $0.ref }
+            .forEach(cleanUpSystemModel)
+        
         self.values.values
             .forEach { $0.ref?.delete() }
+        
+        budLocalRef.projects[self.target] = nil
         self.delete()
+    }
+    
+    
+    // MARK: helpher
+    private func cleanUpSystemModel(_ systemModelRef: SystemModel) {
+        systemModelRef.objects.values
+            .compactMap { $0.ref }
+            .forEach(cleanUpObjectModel)
+        
+        systemModelRef.delete()
+    }
+    private func cleanUpObjectModel(_ objectModelRef: ObjectModel) {
+        // delete GetterModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .flatMap { $0.getters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete SetterModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .flatMap { $0.setters.values }
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        // delete StateModel
+        objectModelRef.states.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete ActioModel
+        objectModelRef.actions.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete FlowModel
+        objectModelRef.flows.values
+            .compactMap { $0.ref }
+            .forEach { $0.delete() }
+        
+        
+        // delete ObjectModel
+        objectModelRef.delete()
     }
     
     
