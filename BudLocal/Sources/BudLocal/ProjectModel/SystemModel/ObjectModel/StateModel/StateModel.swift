@@ -88,6 +88,7 @@ public final class StateModel: Debuggable, Hookable {
             logger.failure("StateModel이 존재하지 않아 실행 취소됩니다.")
             return
         }
+        let objectModelRef = self.owner.ref!
         
         // mutate
         self.getters.values
@@ -98,6 +99,7 @@ public final class StateModel: Debuggable, Hookable {
             .compactMap { $0.ref }
             .forEach { $0.delete() }
         
+        objectModelRef.states[self.target] = nil
         self.delete()
     }
     

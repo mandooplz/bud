@@ -43,11 +43,44 @@ public final class SetterModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func duplicateSetter() async {
-        fatalError()
-    }
     public func removeSetter() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.setterModelIsDeleted)
+            logger.failure("SetterModel이 존재하지 않아 삭제할 수 없습니다.")
+            return
+        }
+        let stateModelRef = self.owner.ref!
+        
+        // mutate
+        removeSetterInAllFlows(self)
+        
+        stateModelRef.setters[self.target] = nil
+        self.delete()
+    }
+    
+    
+    // MARK: helpher
+    private func removeSetterInAllFlows(_ setterModelRef: SetterModel) {
+        
+        let stateModelRef = setterModelRef.owner.ref!
+        let objectModelRef = stateModelRef.owner.ref!
+        let systemModelRef = objectModelRef.owner.ref!
+        let projectModelRef = systemModelRef.owner.ref!
+        
+        
+        projectModelRef.systems.values
+            .compactMap { $0.ref }
+            .flatMap { $0.objects.values }
+            .compactMap { $0.ref }
+            .flatMap { $0.flows.values }
+            .compactMap { $0.ref }
+            .forEach {
+                $0.setters.removeAll { $0 == setterModelRef.target }
+            }
     }
     
     
@@ -63,6 +96,10 @@ public final class SetterModel: Debuggable, Hookable {
         public var ref: SetterModel? {
             SetterModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case setterModelIsDeleted
     }
 }
 

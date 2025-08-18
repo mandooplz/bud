@@ -223,6 +223,18 @@ struct ObjectModelTests {
             #expect(issue.reason == "objectModelIsDeleted")
         }
         
+        @Test func removeObjectModel_SystemModel() async throws {
+            // given
+            let object = objectModelRef.target
+            
+            try await #require(systemModelRef.objects[object] != nil)
+            
+            // when
+            await objectModelRef.removeObject()
+            
+            // then
+            await #expect(systemModelRef.objects[object] == nil)
+        }
         @Test func setRootNilWhenRemoveRootObject_SystemModel() async throws {
             // given
             try await #require(systemModelRef.objects.count == 1)

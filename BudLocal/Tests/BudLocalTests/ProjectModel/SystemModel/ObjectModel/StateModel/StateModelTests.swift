@@ -175,6 +175,18 @@ struct StateModelTests {
             }
         }
         
+        @Test func removeStateModel_ObjectModel() async throws {
+            // given
+            let state = stateModelRef.target
+            
+            try await #require(objectModelRef.states[state] != nil)
+            
+            // when
+            await stateModelRef.removeState()
+            
+            // then
+            await #expect(objectModelRef.states[state] == nil)
+        }
         @Test func deleteStateModel() async throws {
             // given
             try await #require(stateModelRef.id.isExist == true)

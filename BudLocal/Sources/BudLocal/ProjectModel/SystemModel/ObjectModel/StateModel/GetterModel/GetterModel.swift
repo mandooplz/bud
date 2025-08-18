@@ -44,12 +44,21 @@ public final class GetterModel: Debuggable, Hookable {
     
     
     // MARK: action
-    public func duplicate() async {
-        fatalError()
-    }
-    
     public func removeGetter() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.getterModelIsDeleted)
+            logger.failure("GetterModel이 존재하지 않아 실행취소됩니다.")
+            return
+        }
+        let stateModelRef = self.owner.ref!
+        
+        // mutate
+        stateModelRef.getters[self.target] = nil
+        self.delete()
     }
     
     
@@ -65,6 +74,10 @@ public final class GetterModel: Debuggable, Hookable {
         public var ref: GetterModel? {
             GetterModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case getterModelIsDeleted
     }
 }
 
