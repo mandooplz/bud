@@ -43,6 +43,12 @@ public final class ObjectModel: Debuggable, Hookable {
     public internal(set) var states: [StateID: StateModel.ID] = [:]
     public internal(set) var actions: [ActionID: ActionModel.ID] = [:]
     public internal(set) var flows: [FlowID: FlowModel.ID] = [:]
+    internal func getFlowModels(_ action: ActionID) -> [FlowModel.ID] {
+        self.flows.values
+            .filter {
+                $0.ref?.action == action
+            }
+    }
     
     public var issue: (any IssueRepresentable)?
     package var captureHook: Hook?

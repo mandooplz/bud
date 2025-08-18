@@ -12,7 +12,7 @@ private let logger = BudLogger("FlowModel")
 
 // MARK: Object
 @MainActor @Observable
-public final class FlowModel: Sendable {
+public final class FlowModel: Debuggable, Hookable {
     // MARK: core
     init(owner: ObjectModel.ID, action: ActionID) {
         self.owner = owner
@@ -35,14 +35,31 @@ public final class FlowModel: Sendable {
     public var order: Int = 0
     
     public var name: String = "New Flow"
-    
     public var setters: [SetterID] = []
     public nonisolated let action: ActionID
+    
+    public var issue: (any IssueRepresentable)?
+    package var captureHook: Hook?
+    package var computeHook: Hook?
+    package var mutateHook: Hook?
     
     
     // MARK: action
     public func removeFlow() async {
-        fatalError()
+        logger.start()
+        
+        // capture
+        await captureHook?()
+        guard id.isExist else {
+            setIssue(Error.flowModelIsDeleted)
+            logger.failure("FlowModel이 존재하지 않아 실행 취소됩니다.")
+            return
+        }
+        let objectModelRef = self.owner.ref!
+        
+        // mutate
+        objectModelRef.flows[self.target] = nil
+        self.delete()
     }
     
     
@@ -58,6 +75,10 @@ public final class FlowModel: Sendable {
         public var ref: FlowModel? {
             FlowModelManager.container[self]
         }
+    }
+    
+    public enum Error: String, Swift.Error {
+        case flowModelIsDeleted
     }
 }
 

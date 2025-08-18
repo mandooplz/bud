@@ -98,21 +98,42 @@ struct ActionModelTests {
             try await #require(objectModelRef.flows.count == 0)
             
             // when
+            await actionModelRef.createFlow()
             
             // then
-            Issue.record("구현 예정")
+            await #expect(objectModelRef.flows.count == 1)
         }
         @Test func createFlowModel() async throws {
             // given
+            try await #require(objectModelRef.flows.count == 0)
             
             // when
+            await actionModelRef.createFlow()
             
             // then
-            Issue.record("구현 예정")
+            try await #require(objectModelRef.flows.count == 1)
+            
+            let flowModel = try #require(await objectModelRef.flows.values.first)
+            await #expect(flowModel.isExist == true)
+        }
+        @Test func setAction_FlowModel() async throws {
+            // given
+            let action = actionModelRef.target
+            
+            try await #require(objectModelRef.flows.count == 0)
+            
+            // when
+            await actionModelRef.createFlow()
+            
+            // then
+            try await #require(objectModelRef.flows.count == 1)
+            
+            let flowModelRef = try #require(await objectModelRef.flows.first?.value.ref)
+            #expect(flowModelRef.action == action)
         }
     }
     
-    struct LinkFlow {
+    struct LinkExternalFlow {
         let budLocalRef: BudLocal
         let actionModelRef: ActionModel
         let objectModelRef: ObjectModel
@@ -131,7 +152,7 @@ struct ActionModelTests {
             }
             
             // when
-            await actionModelRef.linkFlow()
+            await actionModelRef.linkExternalFlow()
             
             // then
             let issue = try #require(await actionModelRef.issue as? KnownIssue)
@@ -186,6 +207,44 @@ struct ActionModelTests {
             
             // then
             await #expect(actionModelRef.id.isExist == false)
+        }
+        
+        @Test func removeRelatedFlowModel_ObjectModel() async throws {
+            // given
+            try await #require(objectModelRef.flows.count == 0)
+            
+            await actionModelRef.createFlow()
+            await actionModelRef.createFlow()
+            
+            try await #require(objectModelRef.flows.count == 2)
+            
+            for flowModel in await objectModelRef.flows.values {
+                await #expect(flowModel.ref?.action == actionModelRef.target)
+            }
+            
+            // when
+            await actionModelRef.removeAction()
+            
+            // then
+            await #expect(objectModelRef.flows.count == 0)
+        }
+        @Test func deleteRelatedFlowModel() async throws {
+            // given
+            try await #require(objectModelRef.flows.count == 0)
+            
+            await actionModelRef.createFlow()
+            await actionModelRef.createFlow()
+            
+            let flowModels = await objectModelRef.flows.values
+            try #require(flowModels.count == 2)
+            
+            // when
+            await actionModelRef.removeAction()
+            
+            // then
+            for flowModel in flowModels {
+                await #expect(flowModel.isExist == false)
+            }
         }
     }
 }

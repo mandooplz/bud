@@ -89,10 +89,14 @@ public final class ActionModel: Debuggable, Hookable {
             logger.failure("ActionModel이 존재하지 않아 실행취소됩니다.")
             return
         }
+        let objectModelRef = self.owner.ref!
         
-        logger.failure("구현이 필요합니다.")
+        // mutate
+        let flowModelRef = FlowModel(owner: self.owner,
+                                     action: self.target)
+        objectModelRef.flows[flowModelRef.target] = flowModelRef.id
     }
-    public func linkFlow() async {
+    public func linkExternalFlow() async {
         logger.start()
         
         // capture
@@ -122,9 +126,19 @@ public final class ActionModel: Debuggable, Hookable {
         
         
         // mutate
+        objectModelRef.getFlowModels(self.target)
+            .compactMap { $0.ref }
+            .forEach {
+                objectModelRef.flows[$0.target] = nil
+                $0.delete()
+            }
+        
         objectModelRef.actions[self.target] = nil
         self.delete()
     }
+    
+    
+    // MARK: helpher
     
     
     // MARK: value
