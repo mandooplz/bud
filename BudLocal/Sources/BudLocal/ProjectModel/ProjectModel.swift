@@ -67,7 +67,8 @@ public final class ProjectModel: Debuggable, Hookable {
         }
         
         let systemModelRef = SystemModel(owner: self.id,
-                                         location: .origin)
+                                         location: .origin,
+                                         role: .local)
         self.systems[systemModelRef.target] = systemModelRef.id
     }
     public func createValue() async {

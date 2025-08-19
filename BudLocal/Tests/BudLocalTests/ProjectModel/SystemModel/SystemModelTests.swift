@@ -65,6 +65,22 @@ struct SystemModelTests {
             await #expect(newSystemModel.isExist == true)
         }
         
+        @Test func setSystemRoleToShared() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let rightLocation = await systemModelRef.location.getRight()
+            
+            // when
+            await systemModelRef.addSystemRight()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 2)
+            
+            let newSystemModelRef = try #require(await projectModelRef.getSystemModel(rightLocation)?.ref)
+            await #expect(newSystemModelRef.role == .shared)
+        }
+        
         @Test func whenSystemAlreadyExistAtRightLocation() async throws {
             // given
             try await #require(projectModelRef.systems.count == 1)
@@ -132,6 +148,22 @@ struct SystemModelTests {
             await #expect(newSystemModel.isExist == true)
         }
         
+        @Test func setSystemRoleToShared() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let leftLocation = await systemModelRef.location.getLeft()
+            
+            // when
+            await systemModelRef.addSystemLeft()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 2)
+            
+            let newSystemModelRef = try #require(await projectModelRef.getSystemModel(leftLocation)?.ref)
+            await #expect(newSystemModelRef.role == .shared)
+        }
+        
         @Test func whenSystemAlreadyExistAtLeftLocation() async throws {
             // given
             try await #require(projectModelRef.systems.count == 1)
@@ -197,6 +229,22 @@ struct SystemModelTests {
             await #expect(newSystemModel.isExist == true)
         }
         
+        @Test func setSystemRoleToShared() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let topLocation = await systemModelRef.location.getTop()
+            
+            // when
+            await systemModelRef.addSystemTop()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 2)
+            
+            let newSystemModelRef = try #require(await projectModelRef.getSystemModel(topLocation)?.ref)
+            await #expect(newSystemModelRef.role == .shared)
+        }
+        
         @Test func whenSystemAlreadyExistAtTopLocation() async throws {
             // given
             await systemModelRef.addSystemTop()
@@ -256,6 +304,22 @@ struct SystemModelTests {
             // then
             let newSystemModel = try #require(await projectModelRef.getSystemModel(bottomLocation))
             await #expect(newSystemModel.isExist == true)
+        }
+        
+        @Test func setSystemRoleToShared() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let bottomLocation = await systemModelRef.location.getBotttom()
+            
+            // when
+            await systemModelRef.addSystemBottom()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 2)
+            
+            let newSystemModelRef = try #require(await projectModelRef.getSystemModel(bottomLocation)?.ref)
+            await #expect(newSystemModelRef.role == .shared)
         }
         
         @Test func whenSystemAlreadyExistAtTopLocation() async throws {

@@ -23,3 +23,11 @@ public enum SystemMode: Sendable, Hashable, Codable {
     case test
     case real
 }
+
+
+// MARK: SystemRole
+@frozen
+public enum SystemRole: Sendable, Hashable, CodingKey {
+    case local
+    case shared
+}

@@ -14,9 +14,12 @@ private let logger = BudLogger("SystemModel")
 @MainActor @Observable
 public final class SystemModel: Debuggable, Hookable {
     // MARK: core
-    init(owner: ProjectModel.ID, location: Location) {
+    init(owner: ProjectModel.ID,
+         location: Location,
+         role: SystemRole = .shared) {
         self.owner = owner
         self.location = location
+        self.role = role
         
         SystemModelManager.register(self)
     }
@@ -32,6 +35,8 @@ public final class SystemModel: Debuggable, Hookable {
     
     public var name: String = "New System"
     public var location: Location
+    
+    public var role: SystemRole
     
     public var root: ObjectModel.ID?
     public var objects: [ObjectID: ObjectModel.ID] = [:]

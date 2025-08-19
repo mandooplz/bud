@@ -60,6 +60,20 @@ struct ProjectModelTests {
             await #expect(systemModel.isExist == true)
         }
         
+        @Test func setSystemRoleToLocal() async throws {
+            // given
+            try await #require(projectModelRef.systems.count == 0)
+            
+            // when
+            await projectModelRef.createFirstSystem()
+            
+            // then
+            try await #require(projectModelRef.systems.count == 1)
+            
+            let systemModelRef = try #require(await projectModelRef.systems.values.first?.ref)
+            await #expect(systemModelRef.role == .local)
+        }
+        
         @Test func whenSystemAlredayExist() async throws {
             // given
             try await #require(projectModelRef.systems.isEmpty)
