@@ -17,12 +17,25 @@ public struct SystemID: IDRepresentable {
 }
 
 
+// MARK: SystemGroupID
+public struct SysGroupID: IDRepresentable {
+    public let value: UUID
+    
+    public init(value: UUID = UUID()) {
+        self.value = value
+    }
+}
+
+
 // MARK: SystemMode
 @frozen
 public enum SystemMode: Sendable, Hashable, Codable {
     case test
     case real
 }
+
+
+
 
 
 // MARK: SystemRole

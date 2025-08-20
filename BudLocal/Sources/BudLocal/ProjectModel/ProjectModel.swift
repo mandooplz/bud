@@ -32,6 +32,8 @@ public final class ProjectModel: Debuggable, Hookable {
     public var name: String = "New Project"
     
     public var systems: [SystemID: SystemModel.ID] = [:]
+    public var systemGroupID: [SysGroupID: SystemGroup.ID] = [:]
+    
     public var values: [ValueID: ValueModel.ID] = [:]
     internal func getSystemModel(_ location: Location) -> SystemModel.ID? {
         self.systems.values
